@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.desub.local/v1/source_cue_record.schema.json",
+  "title": "Immutable pre-inpaint source cue record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "attempt", "cue_id", "cue_index", "source_sha256",
+    "source_audio", "source_visual", "text_zh_raw", "text_zh_nfc", "extractor",
+    "aligner", "extractor_confidence", "aligner_confidence", "source_classification",
+    "extractor_prompt_sha256", "extractor_response_schema_sha256",
+    "aligner_prompt_sha256", "aligner_response_schema_sha256",
+    "created_at"
+  ],
+  "properties": {
+    "schema_version": {"const": "1"},
+    "attempt": {"$ref": "common.schema.json#/$defs/attemptBinding"},
+    "cue_id": {"$ref": "common.schema.json#/$defs/cueId"},
+    "cue_index": {"type": "integer", "minimum": 0},
+    "source_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "source_audio": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sample_rate_hz", "sample_format", "channels", "channel_layout", "start_sample",
+        "end_sample_exclusive", "speech_start_sample", "speech_end_sample_inclusive",
+        "decode_filter_sha256", "ffmpeg_image_digest", "pcm_slice"
+      ],
+      "properties": {
+        "sample_rate_hz": {
+          "const": 44100,
+          "description": "All source cue sample indices use the absolute 44.1-kHz evidence timeline after the pinned decode/resample filter; they are not native AAC clock indices."
+        },
+        "sample_format": {"const": "f32le"},
+        "channels": {"type": "integer", "minimum": 1, "maximum": 8},
+        "channel_layout": {"type": "string", "minLength": 1, "maxLength": 64},
+        "start_sample": {"type": "integer", "minimum": 0},
+        "end_sample_exclusive": {"type": "integer", "minimum": 1},
+        "speech_start_sample": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Normative speech_anchor_sample for every translation/TTS candidate of this cue."
+        },
+        "speech_end_sample_inclusive": {"type": "integer", "minimum": 0},
+        "decode_filter_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+        "ffmpeg_image_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "pcm_slice": {"$ref": "common.schema.json#/$defs/objectRef"}
+      }
+    },
+    "source_visual": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start_frame", "end_frame_inclusive", "start_pts", "end_pts",
+        "sample_frame", "sample_frame_sha256", "caption_bbox_normalized",
+        "caption_baseline_y_normalized",
+        "crop_geometry_px", "crop"
+      ],
+      "properties": {
+        "start_frame": {"type": "integer", "minimum": 0},
+        "end_frame_inclusive": {"type": "integer", "minimum": 0},
+        "start_pts": {"type": "string", "pattern": "^-?[0-9]+/[1-9][0-9]*$"},
+        "end_pts": {"type": "string", "pattern": "^-?[0-9]+/[1-9][0-9]*$"},
+        "sample_frame": {"type": "integer", "minimum": 0},
+        "sample_frame_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+        "caption_bbox_normalized": {"$ref": "#/$defs/normalizedBbox"},
+        "caption_baseline_y_normalized": {
+          "$ref": "#/$defs/supportedBandCaptionBaseline"
+        },
+        "crop_geometry_px": {"$ref": "#/$defs/pixelBbox"},
+        "crop": {"$ref": "common.schema.json#/$defs/objectRef"}
+      }
+    },
+    "text_zh_raw": {"type": "string", "minLength": 1, "maxLength": 2048},
+    "text_zh_nfc": {"type": "string", "minLength": 1, "maxLength": 2048},
+    "extractor": {"$ref": "#/$defs/digestedModelIdentity"},
+    "aligner": {"$ref": "#/$defs/digestedModelIdentity"},
+    "extractor_confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "aligner_confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "source_classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role", "script", "inside_supported_band", "classifier", "confidence",
+        "classification_sha256"
+      ],
+      "properties": {
+        "role": {"const": "dialogue_caption"},
+        "script": {"const": "cjk"},
+        "inside_supported_band": {
+          "const": true,
+          "description": "True only when caption_baseline_y_normalized is inclusively contained in the frozen supported band [0.55, 0.90]. Caption bbox intersection is not the membership rule."
+        },
+        "classifier": {"$ref": "#/$defs/digestedModelIdentity"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "classification_sha256": {"$ref": "common.schema.json#/$defs/sha256"}
+      }
+    },
+    "extractor_prompt_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "extractor_response_schema_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "aligner_prompt_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "aligner_response_schema_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "created_at": {"$ref": "common.schema.json#/$defs/rfc3339"}
+  },
+  "$defs": {
+    "supportedBandCaptionBaseline": {
+      "type": "number",
+      "minimum": 0.55,
+      "maximum": 0.9,
+      "description": "Inclusive baseline-containment rule: a dialogue caption is supported iff 0.55 <= caption_baseline_y_normalized <= 0.90. Bbox intersection or bbox containment MUST NOT be substituted.",
+      "$comment": "The normalized y axis starts at 0 at the top of the post-rotation output frame and ends at 1 at the bottom. Both endpoints are accepted."
+    },
+    "digestedModelIdentity": {
+      "allOf": [
+        {"$ref": "common.schema.json#/$defs/modelIdentity"},
+        {
+          "required": ["model_digest"],
+          "properties": {
+            "model_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+          }
+        }
+      ]
+    },
+    "normalizedBbox": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": {"type": "number", "minimum": 0, "maximum": 1},
+        "y": {"type": "number", "minimum": 0, "maximum": 1},
+        "width": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+        "height": {"type": "number", "exclusiveMinimum": 0, "maximum": 1}
+      }
+    },
+    "pixelBbox": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": {"type": "integer", "minimum": 0},
+        "y": {"type": "integer", "minimum": 0},
+        "width": {"type": "integer", "minimum": 1},
+        "height": {"type": "integer", "minimum": 1}
+      }
+    }
+  }
+}

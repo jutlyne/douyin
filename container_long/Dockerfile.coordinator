@@ -1,0 +1,23 @@
+FROM python:3.11-alpine
+
+RUN apk upgrade --no-cache
+
+ENV PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    RUN_REGION=asia-southeast1 \
+    WORKER_JOB_NAME=long-worker \
+    ASSEMBLER_JOB_NAME=long-assembler \
+    POLL_SECONDS=10 \
+    WAIT_TIMEOUT_SECONDS=43200
+
+WORKDIR /app
+COPY container_short/requirements.txt /app/requirements.txt
+RUN pip uninstall -y setuptools wheel \
+    && pip install --upgrade pip \
+    && pip install --only-binary=:all: -r /app/requirements.txt \
+    && pip uninstall -y pip \
+    && rm -rf /usr/local/lib/python3.11/ensurepip
+COPY container_short /app/container_short
+COPY container_long /app/container_long
+
+ENTRYPOINT ["python", "-m", "container_long.coordinator_job"]

@@ -1,0 +1,27 @@
+{
+  "policy_name": "desub_kms_key_allowlist",
+  "version": "1.0.0",
+  "status": "blocked_empty_allowlist",
+  "purpose": "ASYMMETRIC_SIGN",
+  "algorithm": "EC_SIGN_P256_SHA256",
+  "required_key_state": "ENABLED",
+  "canonicalization": "RFC8785_JCS_UTF8",
+  "digest": "SHA-256",
+  "crc32c_request_and_response_validation_required": true,
+  "approved_key_versions": [],
+  "approved_public_key_sha256": [],
+  "signer_principals": [],
+  "verifier_principals": [],
+  "audit_logs_required": true,
+  "wrong_unknown_disabled_destroyed_revoked_or_unreadable_key_action": "fail_closed",
+  "rotation": {
+    "new_approvals_use_current_enabled_allowlisted_version": true,
+    "old_version_must_remain_enabled_and_allowlisted_until_approval_expiry": true,
+    "early_revocation_requires_full_affected_gate_rerun_and_new_approval_id": true,
+    "blind_resign_old_evidence_allowed": false
+  },
+  "unresolved_gate_a_bindings": [
+    "full_crypto_key_version", "public_key_sha256", "controller_signer_iam",
+    "verifier_iam", "cloud_audit_log_proof", "cross_language_sign_verify_fixture"
+  ]
+}

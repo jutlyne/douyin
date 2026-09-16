@@ -1,0 +1,48 @@
+{
+  "fixture_name": "source_cue_collection_root_preimage_v1",
+  "version": "1.0.0",
+  "preimage": {
+    "algorithm": "RFC8785-JCS-SHA256-ORDERED-v1",
+    "schema_version": "1",
+    "source": {
+      "uri": "gs://fixture-bucket/source.mp4",
+      "generation": "101",
+      "size_bytes": 1000,
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "content_type": "video/mp4"
+    },
+    "cue_count": 1,
+    "extractor_policy_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "aligner_policy_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+    "cues": [
+      {
+        "cue_id": "cue-000000",
+        "cue_index": 0,
+        "record": {
+          "uri": "gs://fixture-bucket/cues/cue-000000.json",
+          "generation": "102",
+          "size_bytes": 200,
+          "sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "content_type": "application/json"
+        },
+        "crop": {
+          "uri": "gs://fixture-bucket/cues/cue-000000.png",
+          "generation": "103",
+          "size_bytes": 300,
+          "sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+          "content_type": "image/png"
+        },
+        "pcm_slice": {
+          "uri": "gs://fixture-bucket/cues/cue-000000.f32le",
+          "generation": "104",
+          "size_bytes": 400,
+          "sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+          "content_type": "application/octet-stream"
+        }
+      }
+    ]
+  },
+  "canonical_utf8": "{\"algorithm\":\"RFC8785-JCS-SHA256-ORDERED-v1\",\"aligner_policy_sha256\":\"3333333333333333333333333333333333333333333333333333333333333333\",\"cue_count\":1,\"cues\":[{\"crop\":{\"content_type\":\"image/png\",\"generation\":\"103\",\"sha256\":\"5555555555555555555555555555555555555555555555555555555555555555\",\"size_bytes\":300,\"uri\":\"gs://fixture-bucket/cues/cue-000000.png\"},\"cue_id\":\"cue-000000\",\"cue_index\":0,\"pcm_slice\":{\"content_type\":\"application/octet-stream\",\"generation\":\"104\",\"sha256\":\"6666666666666666666666666666666666666666666666666666666666666666\",\"size_bytes\":400,\"uri\":\"gs://fixture-bucket/cues/cue-000000.f32le\"},\"record\":{\"content_type\":\"application/json\",\"generation\":\"102\",\"sha256\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"size_bytes\":200,\"uri\":\"gs://fixture-bucket/cues/cue-000000.json\"}}],\"extractor_policy_sha256\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"schema_version\":\"1\",\"source\":{\"content_type\":\"video/mp4\",\"generation\":\"101\",\"sha256\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"size_bytes\":1000,\"uri\":\"gs://fixture-bucket/source.mp4\"}}",
+  "sha256": "8c8eda25c3dbb02815ab32f7e0df862ed368b85d9520f8cc29015679acb60978",
+  "note": "Canonical bytes were frozen for this JCS-safe product projection. Runtime still requires a vetted RFC8785 implementation and upstream conformance suite."
+}

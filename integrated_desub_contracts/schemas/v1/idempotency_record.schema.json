@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.desub.local/v1/idempotency_record.schema.json",
+  "title": "Generation-versioned seven-day DESUB idempotency binding",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "record_version", "idempotency_key_sha256",
+    "caller_scope_sha256", "request_bytes_contract",
+    "canonical_request_projection",
+    "canonical_request_sha256", "bound_attempt", "replay_binding",
+    "retention_seconds", "conflict_observations", "created_at", "expires_at"
+  ],
+  "properties": {
+    "schema_version": {"const": "1"},
+    "record_version": {"type": "integer", "minimum": 1},
+    "idempotency_key_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "caller_scope_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "request_bytes_contract": {
+      "const": "stored_exact_utf8_json_v1",
+      "$comment": "The SHA is recomputed over the exact stored UTF-8 bytes supplied to the semantic validator. V1 does not claim to implement or verify JCS."
+    },
+    "canonical_request_projection": {
+      "$ref": "create_job_request.schema.json"
+    },
+    "canonical_request_sha256": {
+      "$ref": "common.schema.json#/$defs/sha256",
+      "$comment": "SHA-256 of the exact stored bytes identified by request_bytes_contract."
+    },
+    "bound_attempt": {"$ref": "common.schema.json#/$defs/attemptBinding"},
+    "replay_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "initial_response_body_sha256", "exact_attempt_status_path",
+        "mint_fresh_download_url_only_after_release_revalidation"
+      ],
+      "properties": {
+        "initial_response_body_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+        "exact_attempt_status_path": {
+          "type": "string",
+          "pattern": "^/v1/desub/jobs/desub-[0-9a-f]{32}/attempts/[1-9][0-9]*$",
+          "maxLength": 256
+        },
+        "mint_fresh_download_url_only_after_release_revalidation": {"const": true}
+      }
+    },
+    "retention_seconds": {"const": 604800},
+    "conflict_observations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "conflicting_request_sha256", "error_code", "http_status",
+          "observed_at"
+        ],
+        "properties": {
+          "conflicting_request_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+          "error_code": {"const": "IDEMPOTENCY_CONFLICT"},
+          "http_status": {"const": 409},
+          "observed_at": {"$ref": "common.schema.json#/$defs/rfc3339"}
+        }
+      }
+    },
+    "created_at": {"$ref": "common.schema.json#/$defs/rfc3339"},
+    "expires_at": {
+      "$ref": "common.schema.json#/$defs/rfc3339",
+      "$comment": "Semantic validation requires expires_at = created_at + retention_seconds."
+    }
+  }
+}

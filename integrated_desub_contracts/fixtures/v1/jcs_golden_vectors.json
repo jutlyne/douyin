@@ -1,0 +1,29 @@
+{
+  "fixture_name": "desub_rfc8785_golden_vectors",
+  "version": "1.0.0",
+  "status": "golden_bytes_only_not_a_canonicalizer_conformance_suite",
+  "vectors": [
+    {
+      "name": "utf8_unicode_and_property_order",
+      "logical_input": {"z": 0, "é": "Việt", "a": [true, null, 3]},
+      "canonical_utf8": "{\"a\":[true,null,3],\"z\":0,\"é\":\"Việt\"}",
+      "canonical_utf8_hex": "7b2261223a5b747275652c6e756c6c2c335d2c227a223a302c22c3a9223a225669e1bb8774227d",
+      "sha256": "68262201503d423f5ac486fe31a7c99dbe68d994938006bfe775c9443be6a6b9"
+    },
+    {
+      "name": "json_string_escaping",
+      "logical_input": {"quote": "\"", "control": "line\nfeed"},
+      "canonical_utf8": "{\"control\":\"line\\nfeed\",\"quote\":\"\\\"\"}",
+      "canonical_utf8_hex": "7b22636f6e74726f6c223a226c696e655c6e66656564222c2271756f7465223a225c22227d",
+      "sha256": "7429742ee3fdea8fb7769ab3b21e93298a8adf8e0b8ea758e020e17b7bbc9e43"
+    },
+    {
+      "name": "integer_boolean_and_normative_decimal_string",
+      "logical_input": {"rate": "1.5000", "enabled": true, "attempt_seq": 1},
+      "canonical_utf8": "{\"attempt_seq\":1,\"enabled\":true,\"rate\":\"1.5000\"}",
+      "canonical_utf8_hex": "7b22617474656d70745f736571223a312c22656e61626c6564223a747275652c2272617465223a22312e35303030227d",
+      "sha256": "62e4acd2698ca4728df150ba22891cb0de5a8c652daba02bb0944d43e4739349"
+    }
+  ],
+  "approval_blocker": "A vetted cross-language RFC8785 implementation must pass the upstream conformance suite plus these product vectors before KMS use."
+}

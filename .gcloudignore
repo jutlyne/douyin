@@ -1,0 +1,7 @@
+.git/
+tmp/
+**/__pycache__/
+**/*.pyc
+*.log
+**/_build*.log
+**/_exec*.log

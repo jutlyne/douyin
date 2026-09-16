@@ -1,0 +1,970 @@
+{
+  "schema_version": "1",
+  "policy_name": "error_semantics",
+  "policy_version": "1.0.0",
+  "status": "frozen_v1",
+  "scope_note": "public_http_status applies to a direct HTTP error response; reading a persisted terminal attempt remains HTTP 200",
+  "semantics_by_code": {
+    "INVALID_JSON": {
+      "family": "intake",
+      "allowed_stages": [
+        "intake"
+      ],
+      "retryable": false,
+      "public_http_status": 400,
+      "terminal_state_by_stage": {
+        "intake": null
+      },
+      "context_keys": []
+    },
+    "SCHEMA_VALIDATION_FAILED": {
+      "family": "intake",
+      "allowed_stages": [
+        "intake"
+      ],
+      "retryable": false,
+      "public_http_status": 400,
+      "terminal_state_by_stage": {
+        "intake": null
+      },
+      "context_keys": []
+    },
+    "INVALID_DOUYIN_URL": {
+      "family": "intake",
+      "allowed_stages": [
+        "intake"
+      ],
+      "retryable": false,
+      "public_http_status": 400,
+      "terminal_state_by_stage": {
+        "intake": null
+      },
+      "context_keys": []
+    },
+    "UNAUTHORIZED": {
+      "family": "authorization",
+      "allowed_stages": [
+        "intake",
+        "callback",
+        "download_delivery"
+      ],
+      "retryable": false,
+      "public_http_status": 401,
+      "terminal_state_by_stage": {
+        "intake": null,
+        "callback": null,
+        "download_delivery": null
+      },
+      "context_keys": []
+    },
+    "IDEMPOTENCY_CONFLICT": {
+      "family": "admission",
+      "allowed_stages": [
+        "admission"
+      ],
+      "retryable": false,
+      "public_http_status": 409,
+      "terminal_state_by_stage": {
+        "admission": null
+      },
+      "context_keys": []
+    },
+    "ATTEMPT_IN_PROGRESS": {
+      "family": "admission",
+      "allowed_stages": [
+        "admission"
+      ],
+      "retryable": false,
+      "public_http_status": 409,
+      "terminal_state_by_stage": {
+        "admission": null
+      },
+      "context_keys": []
+    },
+    "CAPACITY_BUSY": {
+      "family": "admission",
+      "allowed_stages": [
+        "admission"
+      ],
+      "retryable": true,
+      "public_http_status": 429,
+      "terminal_state_by_stage": {
+        "admission": null
+      },
+      "context_keys": [
+        "limit_name",
+        "retry_after_seconds"
+      ]
+    },
+    "JOB_NOT_FOUND": {
+      "family": "lookup",
+      "allowed_stages": [
+        "admission"
+      ],
+      "retryable": false,
+      "public_http_status": 404,
+      "terminal_state_by_stage": {
+        "admission": null
+      },
+      "context_keys": []
+    },
+    "ATTEMPT_NOT_FOUND": {
+      "family": "lookup",
+      "allowed_stages": [
+        "admission"
+      ],
+      "retryable": false,
+      "public_http_status": 404,
+      "terminal_state_by_stage": {
+        "admission": null
+      },
+      "context_keys": []
+    },
+    "SOURCE_DOWNLOAD_TIMEOUT": {
+      "family": "download",
+      "allowed_stages": [
+        "download"
+      ],
+      "retryable": true,
+      "public_http_status": 504,
+      "terminal_state_by_stage": {
+        "download": "failed"
+      },
+      "context_keys": [
+        "retry_after_seconds"
+      ]
+    },
+    "SOURCE_DOWNLOAD_FAILED": {
+      "family": "download",
+      "allowed_stages": [
+        "download"
+      ],
+      "retryable": true,
+      "public_http_status": 502,
+      "terminal_state_by_stage": {
+        "download": "failed"
+      },
+      "context_keys": [
+        "retry_after_seconds"
+      ]
+    },
+    "SOURCE_REDIRECT_BLOCKED": {
+      "family": "download",
+      "allowed_stages": [
+        "download"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "download": "failed"
+      },
+      "context_keys": []
+    },
+    "SOURCE_TOO_LARGE": {
+      "family": "input_policy",
+      "allowed_stages": [
+        "input_preflight"
+      ],
+      "retryable": false,
+      "public_http_status": 413,
+      "terminal_state_by_stage": {
+        "input_preflight": "failed"
+      },
+      "context_keys": [
+        "limit_name"
+      ]
+    },
+    "SOURCE_MIME_UNSUPPORTED": {
+      "family": "input_policy",
+      "allowed_stages": [
+        "input_preflight"
+      ],
+      "retryable": false,
+      "public_http_status": 415,
+      "terminal_state_by_stage": {
+        "input_preflight": "failed"
+      },
+      "context_keys": []
+    },
+    "SOURCE_CONTAINER_UNSUPPORTED": {
+      "family": "input_policy",
+      "allowed_stages": [
+        "input_preflight"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "input_preflight": "failed"
+      },
+      "context_keys": []
+    },
+    "SOURCE_DURATION_UNSUPPORTED": {
+      "family": "input_policy",
+      "allowed_stages": [
+        "input_preflight"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "input_preflight": "failed"
+      },
+      "context_keys": [
+        "limit_name"
+      ]
+    },
+    "SOURCE_RESOLUTION_UNSUPPORTED": {
+      "family": "input_policy",
+      "allowed_stages": [
+        "input_preflight"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "input_preflight": "failed"
+      },
+      "context_keys": [
+        "limit_name"
+      ]
+    },
+    "SOURCE_FPS_UNSUPPORTED": {
+      "family": "input_policy",
+      "allowed_stages": [
+        "input_preflight"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "input_preflight": "failed"
+      },
+      "context_keys": [
+        "limit_name"
+      ]
+    },
+    "SOURCE_VFR_UNSUPPORTED": {
+      "family": "input_policy",
+      "allowed_stages": [
+        "input_preflight"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "input_preflight": "failed"
+      },
+      "context_keys": []
+    },
+    "SOURCE_HDR_UNSUPPORTED": {
+      "family": "input_policy",
+      "allowed_stages": [
+        "input_preflight"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "input_preflight": "failed"
+      },
+      "context_keys": []
+    },
+    "SOURCE_ROTATION_UNSUPPORTED": {
+      "family": "input_policy",
+      "allowed_stages": [
+        "input_preflight"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "input_preflight": "failed"
+      },
+      "context_keys": []
+    },
+    "SOURCE_AUDIO_CODEC_UNSUPPORTED": {
+      "family": "input_policy",
+      "allowed_stages": [
+        "input_preflight"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "input_preflight": "failed"
+      },
+      "context_keys": []
+    },
+    "SOURCE_MULTI_AUDIO_UNSUPPORTED": {
+      "family": "input_policy",
+      "allowed_stages": [
+        "input_preflight"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "input_preflight": "failed"
+      },
+      "context_keys": []
+    },
+    "DUB_SOURCE_AUDIO_REQUIRED": {
+      "family": "input_policy",
+      "allowed_stages": [
+        "input_preflight"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "input_preflight": "failed"
+      },
+      "context_keys": []
+    },
+    "UNSUPPORTED_SUBTITLE_LAYOUT": {
+      "family": "input_policy",
+      "allowed_stages": [
+        "input_preflight"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "input_preflight": "failed"
+      },
+      "context_keys": []
+    },
+    "LAUNCH_PRECONDITION_FAILED": {
+      "family": "lifecycle",
+      "allowed_stages": [
+        "launch"
+      ],
+      "retryable": false,
+      "public_http_status": 409,
+      "terminal_state_by_stage": {
+        "launch": "failed"
+      },
+      "context_keys": []
+    },
+    "LAUNCH_STATE_UNRESOLVED": {
+      "family": "lifecycle",
+      "allowed_stages": [
+        "launch"
+      ],
+      "retryable": true,
+      "public_http_status": 503,
+      "terminal_state_by_stage": {
+        "launch": "failed"
+      },
+      "context_keys": [
+        "retry_after_seconds"
+      ]
+    },
+    "EXECUTION_TIMEOUT": {
+      "family": "lifecycle",
+      "allowed_stages": [
+        "launch"
+      ],
+      "retryable": true,
+      "public_http_status": 504,
+      "terminal_state_by_stage": {
+        "launch": "failed"
+      },
+      "context_keys": [
+        "limit_name"
+      ]
+    },
+    "STALE_FENCE": {
+      "family": "lifecycle",
+      "allowed_stages": [
+        "launch"
+      ],
+      "retryable": false,
+      "public_http_status": 409,
+      "terminal_state_by_stage": {
+        "launch": "failed"
+      },
+      "context_keys": []
+    },
+    "INVALID_STATE_TRANSITION": {
+      "family": "lifecycle",
+      "allowed_stages": [
+        "launch"
+      ],
+      "retryable": false,
+      "public_http_status": 409,
+      "terminal_state_by_stage": {
+        "launch": "failed"
+      },
+      "context_keys": []
+    },
+    "SOURCE_CUE_EXTRACTION_FAILED": {
+      "family": "source_cue",
+      "allowed_stages": [
+        "source_cue_extraction"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "source_cue_extraction": "failed"
+      },
+      "context_keys": []
+    },
+    "SOURCE_CUE_MANIFEST_INVALID": {
+      "family": "source_cue",
+      "allowed_stages": [
+        "source_cue_extraction"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "source_cue_extraction": "failed"
+      },
+      "context_keys": []
+    },
+    "SOURCE_CUE_MISMATCH": {
+      "family": "source_cue",
+      "allowed_stages": [
+        "source_cue_extraction"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "source_cue_extraction": "failed"
+      },
+      "context_keys": [
+        "cue_index"
+      ]
+    },
+    "CLEAN_DETECTION_FAILED": {
+      "family": "clean",
+      "allowed_stages": [
+        "clean_detection"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "clean_detection": "clean_qa_failed"
+      },
+      "context_keys": []
+    },
+    "CLEAN_INPAINT_FAILED": {
+      "family": "clean",
+      "allowed_stages": [
+        "clean_inpaint"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "clean_inpaint": "clean_qa_failed"
+      },
+      "context_keys": []
+    },
+    "CLEAN_ENCODE_FAILED": {
+      "family": "clean",
+      "allowed_stages": [
+        "clean_encode"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "clean_encode": "clean_qa_failed"
+      },
+      "context_keys": []
+    },
+    "CLEAN_MEDIA_PARITY_FAILED": {
+      "family": "clean",
+      "allowed_stages": [
+        "clean_machine_qa"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "clean_machine_qa": "clean_qa_failed"
+      },
+      "context_keys": []
+    },
+    "CLEAN_AUDIO_PARITY_FAILED": {
+      "family": "clean",
+      "allowed_stages": [
+        "clean_machine_qa"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "clean_machine_qa": "clean_qa_failed"
+      },
+      "context_keys": []
+    },
+    "CLEAN_RESIDUAL_TEXT": {
+      "family": "clean",
+      "allowed_stages": [
+        "clean_machine_qa"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "clean_machine_qa": "clean_qa_failed"
+      },
+      "context_keys": []
+    },
+    "CLEAN_MASK_PRECISION_FAILED": {
+      "family": "clean",
+      "allowed_stages": [
+        "clean_machine_qa"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "clean_machine_qa": "clean_qa_failed"
+      },
+      "context_keys": []
+    },
+    "CLEAN_OUTSIDE_MASK_DAMAGE": {
+      "family": "clean",
+      "allowed_stages": [
+        "clean_machine_qa"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "clean_machine_qa": "clean_qa_failed"
+      },
+      "context_keys": []
+    },
+    "CLEAN_TEMPORAL_FLICKER": {
+      "family": "clean",
+      "allowed_stages": [
+        "clean_machine_qa"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "clean_machine_qa": "clean_qa_failed"
+      },
+      "context_keys": []
+    },
+    "CLEAN_QA_FAILED": {
+      "family": "clean",
+      "allowed_stages": [
+        "clean_machine_qa",
+        "clean_agent_qa"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "clean_machine_qa": "clean_qa_failed",
+        "clean_agent_qa": "clean_qa_failed"
+      },
+      "context_keys": []
+    },
+    "CLEAN_APPROVAL_INVALID": {
+      "family": "approval",
+      "allowed_stages": [
+        "clean_signing"
+      ],
+      "retryable": false,
+      "public_http_status": 409,
+      "terminal_state_by_stage": {
+        "clean_signing": "clean_qa_failed"
+      },
+      "context_keys": []
+    },
+    "SPEECH_ALIGNMENT_FAILED": {
+      "family": "translation",
+      "allowed_stages": [
+        "speech_alignment"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "speech_alignment": "translation_failed"
+      },
+      "context_keys": []
+    },
+    "TRANSLATION_PROVIDER_FAILED": {
+      "family": "translation",
+      "allowed_stages": [
+        "translation"
+      ],
+      "retryable": true,
+      "public_http_status": 502,
+      "terminal_state_by_stage": {
+        "translation": "translation_failed"
+      },
+      "context_keys": [
+        "retry_after_seconds"
+      ]
+    },
+    "TRANSLATION_PREFLIGHT_FAILED": {
+      "family": "translation",
+      "allowed_stages": [
+        "translation_preflight"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "translation_preflight": "translation_failed"
+      },
+      "context_keys": [
+        "cue_index"
+      ]
+    },
+    "DUB_CUE_UNFIT": {
+      "family": "scheduling",
+      "allowed_stages": [
+        "scheduling"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "scheduling": "scheduling_failed"
+      },
+      "context_keys": [
+        "cue_index",
+        "limit_name"
+      ]
+    },
+    "TTS_PROVIDER_FAILED": {
+      "family": "tts",
+      "allowed_stages": [
+        "tts"
+      ],
+      "retryable": true,
+      "public_http_status": 502,
+      "terminal_state_by_stage": {
+        "tts": "tts_failed"
+      },
+      "context_keys": [
+        "cue_index",
+        "retry_after_seconds"
+      ]
+    },
+    "TTS_MEDIA_INVALID": {
+      "family": "tts",
+      "allowed_stages": [
+        "tts"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "tts": "tts_failed"
+      },
+      "context_keys": [
+        "cue_index"
+      ]
+    },
+    "TTS_VOICE_RATE_MISMATCH": {
+      "family": "tts",
+      "allowed_stages": [
+        "tts"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "tts": "tts_failed"
+      },
+      "context_keys": [
+        "cue_index"
+      ]
+    },
+    "DUB_SCHEDULE_INVALID": {
+      "family": "scheduling",
+      "allowed_stages": [
+        "scheduling"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "scheduling": "scheduling_failed"
+      },
+      "context_keys": [
+        "cue_index",
+        "limit_name"
+      ]
+    },
+    "DUB_SUBTITLE_UNFIT": {
+      "family": "subtitle",
+      "allowed_stages": [
+        "vietsub"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "vietsub": "subtitle_failed"
+      },
+      "context_keys": [
+        "cue_index",
+        "limit_name"
+      ]
+    },
+    "DUB_VIDEO_INTEGRITY_FAILED": {
+      "family": "dub",
+      "allowed_stages": [
+        "dub_machine_qa"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "dub_machine_qa": "dub_qa_failed"
+      },
+      "context_keys": []
+    },
+    "DUB_AUDIO_POLICY_FAILED": {
+      "family": "dub",
+      "allowed_stages": [
+        "audio_mix",
+        "dub_machine_qa"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "audio_mix": "dub_qa_failed",
+        "dub_machine_qa": "dub_qa_failed"
+      },
+      "context_keys": []
+    },
+    "DUB_AUDIO_TAIL_FAILED": {
+      "family": "dub",
+      "allowed_stages": [
+        "dub_machine_qa"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "dub_machine_qa": "dub_qa_failed"
+      },
+      "context_keys": []
+    },
+    "DUB_QA_FAILED": {
+      "family": "dub",
+      "allowed_stages": [
+        "dub_machine_qa",
+        "dub_agent_qa"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "dub_machine_qa": "dub_qa_failed",
+        "dub_agent_qa": "dub_qa_failed"
+      },
+      "context_keys": []
+    },
+    "QA_RUNTIME_UNAVAILABLE": {
+      "family": "qa_runtime",
+      "allowed_stages": [
+        "clean_agent_qa",
+        "translation_preflight",
+        "dub_agent_qa"
+      ],
+      "retryable": true,
+      "public_http_status": 503,
+      "terminal_state_by_stage": {
+        "clean_agent_qa": "clean_qa_failed",
+        "translation_preflight": "translation_failed",
+        "dub_agent_qa": "dub_qa_failed"
+      },
+      "context_keys": [
+        "retry_after_seconds"
+      ]
+    },
+    "QA_TIMEOUT": {
+      "family": "qa_runtime",
+      "allowed_stages": [
+        "clean_agent_qa",
+        "translation_preflight",
+        "dub_agent_qa"
+      ],
+      "retryable": true,
+      "public_http_status": 504,
+      "terminal_state_by_stage": {
+        "clean_agent_qa": "clean_qa_failed",
+        "translation_preflight": "translation_failed",
+        "dub_agent_qa": "dub_qa_failed"
+      },
+      "context_keys": [
+        "retry_after_seconds"
+      ]
+    },
+    "QA_VERDICT_INVALID": {
+      "family": "qa_runtime",
+      "allowed_stages": [
+        "clean_agent_qa",
+        "translation_preflight",
+        "dub_agent_qa"
+      ],
+      "retryable": false,
+      "public_http_status": 422,
+      "terminal_state_by_stage": {
+        "clean_agent_qa": "clean_qa_failed",
+        "translation_preflight": "translation_failed",
+        "dub_agent_qa": "dub_qa_failed"
+      },
+      "context_keys": []
+    },
+    "QA_VERDICT_BINDING_MISMATCH": {
+      "family": "qa_runtime",
+      "allowed_stages": [
+        "clean_agent_qa",
+        "translation_preflight",
+        "dub_agent_qa"
+      ],
+      "retryable": false,
+      "public_http_status": 409,
+      "terminal_state_by_stage": {
+        "clean_agent_qa": "clean_qa_failed",
+        "translation_preflight": "translation_failed",
+        "dub_agent_qa": "dub_qa_failed"
+      },
+      "context_keys": []
+    },
+    "APPROVAL_INVALID": {
+      "family": "approval",
+      "allowed_stages": [
+        "clean_signing",
+        "release_signing",
+        "download_delivery"
+      ],
+      "retryable": false,
+      "public_http_status": 409,
+      "terminal_state_by_stage": {
+        "clean_signing": "clean_qa_failed",
+        "release_signing": "dub_qa_failed",
+        "download_delivery": null
+      },
+      "context_keys": []
+    },
+    "APPROVAL_EXPIRED": {
+      "family": "approval",
+      "allowed_stages": [
+        "clean_signing",
+        "release_signing",
+        "download_delivery"
+      ],
+      "retryable": false,
+      "public_http_status": 409,
+      "terminal_state_by_stage": {
+        "clean_signing": "clean_qa_failed",
+        "release_signing": "dub_qa_failed",
+        "download_delivery": null
+      },
+      "context_keys": []
+    },
+    "APPROVAL_REVERIFICATION_REQUIRED": {
+      "family": "approval",
+      "allowed_stages": [
+        "download_delivery"
+      ],
+      "retryable": false,
+      "public_http_status": 409,
+      "terminal_state_by_stage": {
+        "download_delivery": null
+      },
+      "context_keys": []
+    },
+    "ATTEMPT_RESULT_EXPIRED": {
+      "family": "retention",
+      "allowed_stages": [
+        "download_delivery"
+      ],
+      "retryable": false,
+      "public_http_status": 410,
+      "terminal_state_by_stage": {
+        "download_delivery": null
+      },
+      "context_keys": []
+    },
+    "KMS_KEY_INVALID": {
+      "family": "approval",
+      "allowed_stages": [
+        "clean_signing",
+        "release_signing"
+      ],
+      "retryable": false,
+      "public_http_status": 500,
+      "terminal_state_by_stage": {
+        "clean_signing": "clean_qa_failed",
+        "release_signing": "dub_qa_failed"
+      },
+      "context_keys": []
+    },
+    "REQUEST_CANCELLED": {
+      "family": "cancellation",
+      "allowed_stages": [
+        "cancellation"
+      ],
+      "retryable": false,
+      "public_http_status": 200,
+      "terminal_state_by_stage": {
+        "cancellation": "cancelled"
+      },
+      "context_keys": []
+    },
+    "CALLBACK_SIGNATURE_INVALID": {
+      "family": "callback",
+      "allowed_stages": [
+        "callback"
+      ],
+      "retryable": false,
+      "public_http_status": 401,
+      "terminal_state_by_stage": {
+        "callback": null
+      },
+      "context_keys": []
+    },
+    "CALLBACK_REPLAY": {
+      "family": "callback",
+      "allowed_stages": [
+        "callback"
+      ],
+      "retryable": false,
+      "public_http_status": 409,
+      "terminal_state_by_stage": {
+        "callback": null
+      },
+      "context_keys": []
+    },
+    "CALLBACK_DELIVERY_EXHAUSTED": {
+      "family": "callback",
+      "allowed_stages": [
+        "callback"
+      ],
+      "retryable": true,
+      "public_http_status": 503,
+      "terminal_state_by_stage": {
+        "callback": "failed"
+      },
+      "context_keys": [
+        "retry_after_seconds"
+      ]
+    },
+    "DOWNLOAD_SIGNATURE_INVALID": {
+      "family": "download",
+      "allowed_stages": [
+        "download_delivery"
+      ],
+      "retryable": false,
+      "public_http_status": 401,
+      "terminal_state_by_stage": {
+        "download_delivery": null
+      },
+      "context_keys": []
+    },
+    "DOWNLOAD_EXPIRED": {
+      "family": "download",
+      "allowed_stages": [
+        "download_delivery"
+      ],
+      "retryable": false,
+      "public_http_status": 410,
+      "terminal_state_by_stage": {
+        "download_delivery": null
+      },
+      "context_keys": []
+    },
+    "DOWNLOAD_RANGE_INVALID": {
+      "family": "download",
+      "allowed_stages": [
+        "download_delivery"
+      ],
+      "retryable": false,
+      "public_http_status": 416,
+      "terminal_state_by_stage": {
+        "download_delivery": null
+      },
+      "context_keys": [
+        "limit_name"
+      ]
+    }
+  }
+}

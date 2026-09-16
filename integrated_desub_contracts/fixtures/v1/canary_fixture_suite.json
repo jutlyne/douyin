@@ -1,0 +1,102 @@
+{
+  "fixture_suite": "integrated_desub_canary_v1",
+  "version": "1.0.0",
+  "status": "blocked_incomplete_fixture_evidence",
+  "required_coverage": [
+    "dense_dialogue",
+    "humor_or_punchline",
+    "repeated_cue_text",
+    "multiple_source_speakers",
+    "source_audio_ends_before_video",
+    "last_vietnamese_active_voice_ends_at_least_1_second_before_video",
+    "two_line_vietnamese_with_diacritics",
+    "high_motion_or_complex_background"
+  ],
+  "fixtures": [
+    {
+      "fixture_id": "current-full-sample",
+      "role": "current_video",
+      "status": "blocked_ground_truth_cue_count_conflict",
+      "aweme_id": "7558369768110116134",
+      "local_path": "tmp/cover-visub-verification/source.mp4",
+      "source_object": {
+        "uri": "gs://YOUR_GCP_PROJECT-media-sg/desub/cover-visub/v9/douyin-967a16485ac8/source.mp4",
+        "generation": "1784193824269484",
+        "size_bytes": 43853627,
+        "sha256": "387895eef666163e2586d2e28b77c0da97fabd7293301077c719632788ed328e",
+        "content_type": "video/mp4"
+      },
+      "observed_media": {"duration_seconds": 190.966667, "width": 720, "height": 1280, "fps": "30/1"},
+      "observed_coverage": ["dense_dialogue", "repeated_cue_text", "numbers_and_units", "two_line_source_captions"],
+      "legacy_candidate": {
+        "local_path": "tmp/cover-url-verification/output.mp4",
+        "size_bytes": 99568863,
+        "sha256": "cc1748725ed4da518ed8b90d421bf8c7fd57143ec2722d4d72206bdc2388e567",
+        "expected_findings": [
+          "CLEAN_INPAINT_FAILED_rounded_blur_not_clean",
+          "DUB_AUDIO_TAIL_FAILED_approximately_0.699_seconds_short",
+          "CLEAN_RESIDUAL_TEXT_unproven"
+        ]
+      },
+      "blockers": [
+        "generated_cue_artifacts_disagree_77_78_81",
+        "no_authoritative_ground_truth_N",
+        "multi_speaker_and_punchline_labels_not_verified",
+        "new_rate_1.5000_voice_fixture_absent"
+      ]
+    },
+    {
+      "fixture_id": "high-motion-partial-candidate",
+      "role": "high_motion_complex_background",
+      "status": "blocked_partial_clip_not_canary_source",
+      "aweme_id": null,
+      "local_path": "tmp/desub-flow-8015-first10/source_first10.mp4",
+      "source_object": null,
+      "local_file": {
+        "size_bytes": 3354192,
+        "sha256": "8cd5c46241a62dae13332fbd361be2d4c0bd6d03c099be08fbd224fa683ad279",
+        "content_type": "video/mp4"
+      },
+      "observed_media": {"duration_seconds": 10.0, "width": 576, "height": 1024, "fps": "24/1", "source_frames": 238},
+      "observed_coverage": ["three_dimensional_water_and_stone_complex_background", "high_motion_candidate"],
+      "legacy_candidate": {
+        "local_path": "tmp/desub-flow-8015-first10/clip_lama_10s_base.mp4",
+        "size_bytes": 33938264,
+        "sha256": "12eb7c9170cfb2663bd94d1d2ec339d41690faba66490556d055869a92be4c24",
+        "expected_findings": [
+          "CLEAN_MEDIA_PARITY_FAILED_239_output_frames_vs_238_source_frames",
+          "CLEAN_MEDIA_PARITY_FAILED_9.959_seconds_vs_10.000_seconds",
+          "CLEAN_RESIDUAL_TEXT_unproven",
+          "CLEAN_TEMPORAL_FLICKER_unproven"
+        ]
+      },
+      "blockers": [
+        "full_original_douyin_source_missing",
+        "aweme_and_object_generation_missing",
+        "authoritative_probe_and_ground_truth_missing"
+      ]
+    },
+    {
+      "fixture_id": "manhua-required",
+      "role": "manhua",
+      "status": "blocked_missing_media",
+      "aweme_id": null,
+      "local_path": null,
+      "source_object": null,
+      "observed_media": null,
+      "observed_coverage": [],
+      "legacy_candidate": null,
+      "blockers": [
+        "approved_full_source_media_missing",
+        "immutable_source_hash_and_generation_missing",
+        "ground_truth_cues_and_expected_findings_missing"
+      ]
+    }
+  ],
+  "suite_level_blockers": [
+    "no_fixture_proves_source_audio_ends_before_video",
+    "no_valid_BV075_streaming_rate_1.5000_fixture_without_post_atempo_or_fallback",
+    "no_fixture_proves_last_vietnamese_active_voice_ends_at_least_1_second_before_video",
+    "not_all_required_coverage_labels_have_ground_truth"
+  ]
+}

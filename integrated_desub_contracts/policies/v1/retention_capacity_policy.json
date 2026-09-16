@@ -1,0 +1,36 @@
+{
+  "policy_name": "retention_capacity_slo_policy",
+  "version": "1.0.0",
+  "status": "frozen",
+  "retention": {
+    "days_7": [
+      "source", "clean", "dubbed", "source_cue_records", "source_cue_manifest",
+      "translation_attempts", "tts_attempts", "cue_ledger", "masks", "controls",
+      "stems", "machine_reports", "manifests", "verdicts", "approvals", "indices"
+    ],
+    "raw_qa_packet_days": 2,
+    "idempotency_record_days": 7,
+    "signed_download_link_hours": 24,
+    "verifier_packet_signed_url_hours": 1,
+    "download_link_refreshable_after_exact_release_revalidation": true
+  },
+  "capacity": {
+    "max_active_executions": 2,
+    "max_queued_jobs": 10,
+    "overflow_http_status": 429,
+    "overflow_error_code": "CAPACITY_BUSY",
+    "per_user_quota": null,
+    "reason": "v1_has_one_allowlisted_private_chat"
+  },
+  "slo": {
+    "reference_video": "7_minutes_1080p",
+    "execution_minutes_max": 60,
+    "hard_timeout_minutes": 90,
+    "queue_time_reported_separately": true
+  },
+  "cost": {
+    "telemetry_required": true,
+    "automatic_quality_model_reasoning_downgrade_allowed": false,
+    "per_video_cost_cap": null
+  }
+}

@@ -1,0 +1,5 @@
+/.gitattributes text eol=lf
+/docs/N8N_CLEAN_DESUB_PLAN.md text eol=lf
+/docs/DESUB_*.md text eol=lf
+/integrated_desub_contracts/** text eol=lf
+/tests/test_integrated_desub_*.py text eol=lf

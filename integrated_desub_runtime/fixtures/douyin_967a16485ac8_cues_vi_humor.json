@@ -1,0 +1,1019 @@
+{
+  "model": "gemini-3.1-pro-preview",
+  "region": "global",
+  "source_uri": "gs://YOUR_GCP_PROJECT-media-sg/desub/_lab/douyin-7558369768110116134-full-visub-20260713-133419/visub_input.mp4",
+  "base_uri": "gs://YOUR_GCP_PROJECT-media-sg/desub/_lab/douyin-7558369768110116134-full-visub-20260713-133419/clip_lama_30s.mp4",
+  "mask_uri": "gs://YOUR_GCP_PROJECT-media-sg/desub/_lab/douyin-7558369768110116134-full-visub-20260713-133419/mask.json",
+  "chunk_core_seconds": 15,
+  "chunk_overlap_seconds": 2,
+  "chunks": [
+    {
+      "index": 0,
+      "core_start": 0,
+      "core_end": 15,
+      "segment_start": 0,
+      "segment_end": 17,
+      "model_cues": 12,
+      "accepted_cues": 11,
+      "retry_count": 1,
+      "known_present": true,
+      "uri": "gs://YOUR_GCP_PROJECT-media-sg/desub/_lab/douyin-7558369768110116134-full-visub-20260713-133419/chunked_v4/chunk_00.mp4"
+    },
+    {
+      "index": 1,
+      "core_start": 15,
+      "core_end": 30,
+      "segment_start": 13,
+      "segment_end": 32,
+      "model_cues": 11,
+      "accepted_cues": 8,
+      "retry_count": 0,
+      "known_present": true,
+      "uri": "gs://YOUR_GCP_PROJECT-media-sg/desub/_lab/douyin-7558369768110116134-full-visub-20260713-133419/chunked_v4/chunk_01.mp4"
+    },
+    {
+      "index": 2,
+      "core_start": 30,
+      "core_end": 45,
+      "segment_start": 28,
+      "segment_end": 47,
+      "model_cues": 6,
+      "accepted_cues": 6,
+      "retry_count": 0,
+      "known_present": true,
+      "uri": "gs://YOUR_GCP_PROJECT-media-sg/desub/_lab/douyin-7558369768110116134-full-visub-20260713-133419/chunked_v4/chunk_02.mp4"
+    },
+    {
+      "index": 3,
+      "core_start": 45,
+      "core_end": 60,
+      "segment_start": 43,
+      "segment_end": 62,
+      "model_cues": 7,
+      "accepted_cues": 5,
+      "retry_count": 0,
+      "known_present": true,
+      "uri": "gs://YOUR_GCP_PROJECT-media-sg/desub/_lab/douyin-7558369768110116134-full-visub-20260713-133419/chunked_v4/chunk_03.mp4"
+    },
+    {
+      "index": 4,
+      "core_start": 60,
+      "core_end": 75,
+      "segment_start": 58,
+      "segment_end": 77,
+      "model_cues": 6,
+      "accepted_cues": 4,
+      "retry_count": 0,
+      "known_present": true,
+      "uri": "gs://YOUR_GCP_PROJECT-media-sg/desub/_lab/douyin-7558369768110116134-full-visub-20260713-133419/chunked_v4/chunk_04.mp4"
+    },
+    {
+      "index": 5,
+      "core_start": 75,
+      "core_end": 90,
+      "segment_start": 73,
+      "segment_end": 92,
+      "model_cues": 6,
+      "accepted_cues": 5,
+      "retry_count": 0,
+      "known_present": true,
+      "uri": "gs://YOUR_GCP_PROJECT-media-sg/desub/_lab/douyin-7558369768110116134-full-visub-20260713-133419/chunked_v4/chunk_05.mp4"
+    },
+    {
+      "index": 6,
+      "core_start": 90,
+      "core_end": 105,
+      "segment_start": 88,
+      "segment_end": 107,
+      "model_cues": 11,
+      "accepted_cues": 7,
+      "retry_count": 0,
+      "known_present": true,
+      "uri": "gs://YOUR_GCP_PROJECT-media-sg/desub/_lab/douyin-7558369768110116134-full-visub-20260713-133419/chunked_v4/chunk_06.mp4"
+    },
+    {
+      "index": 7,
+      "core_start": 105,
+      "core_end": 120,
+      "segment_start": 103,
+      "segment_end": 122,
+      "model_cues": 0,
+      "accepted_cues": 0,
+      "retry_count": 1,
+      "known_present": true,
+      "uri": "gs://YOUR_GCP_PROJECT-media-sg/desub/_lab/douyin-7558369768110116134-full-visub-20260713-133419/chunked_v4/chunk_07.mp4"
+    },
+    {
+      "index": 8,
+      "core_start": 120,
+      "core_end": 135,
+      "segment_start": 118,
+      "segment_end": 137,
+      "model_cues": 9,
+      "accepted_cues": 7,
+      "retry_count": 0,
+      "known_present": true,
+      "uri": "gs://YOUR_GCP_PROJECT-media-sg/desub/_lab/douyin-7558369768110116134-full-visub-20260713-133419/chunked_v4/chunk_08.mp4"
+    },
+    {
+      "index": 9,
+      "core_start": 135,
+      "core_end": 150,
+      "segment_start": 133,
+      "segment_end": 152,
+      "model_cues": 8,
+      "accepted_cues": 6,
+      "retry_count": 0,
+      "known_present": true,
+      "uri": "gs://YOUR_GCP_PROJECT-media-sg/desub/_lab/douyin-7558369768110116134-full-visub-20260713-133419/chunked_v4/chunk_09.mp4"
+    },
+    {
+      "index": 10,
+      "core_start": 150,
+      "core_end": 165,
+      "segment_start": 148,
+      "segment_end": 167,
+      "model_cues": 10,
+      "accepted_cues": 7,
+      "retry_count": 0,
+      "known_present": true,
+      "uri": "gs://YOUR_GCP_PROJECT-media-sg/desub/_lab/douyin-7558369768110116134-full-visub-20260713-133419/chunked_v4/chunk_10.mp4"
+    },
+    {
+      "index": 11,
+      "core_start": 165,
+      "core_end": 180,
+      "segment_start": 163,
+      "segment_end": 182,
+      "model_cues": 5,
+      "accepted_cues": 3,
+      "retry_count": 0,
+      "known_present": true,
+      "uri": "gs://YOUR_GCP_PROJECT-media-sg/desub/_lab/douyin-7558369768110116134-full-visub-20260713-133419/chunked_v4/chunk_11.mp4"
+    },
+    {
+      "index": 12,
+      "core_start": 180,
+      "core_end": 190.966667,
+      "segment_start": 178,
+      "segment_end": 190.966667,
+      "model_cues": 4,
+      "accepted_cues": 4,
+      "retry_count": 0,
+      "known_present": true,
+      "uri": "gs://YOUR_GCP_PROJECT-media-sg/desub/_lab/douyin-7558369768110116134-full-visub-20260713-133419/chunked_v4/chunk_12.mp4"
+    }
+  ],
+  "raw_cue_count": 80,
+  "cue_count": 77,
+  "rejected": [],
+  "cues": [
+    {
+      "start": 0,
+      "end": 0.8,
+      "text_zh": "老板你好",
+      "text_vi": "Chào chủ tiệm.",
+      "center_x": 0.49930555555555556,
+      "center_y": 0.735546875,
+      "line_count": 1,
+      "reviewed_index": 0
+    },
+    {
+      "start": 0.8,
+      "end": 1.6,
+      "text_zh": "你好",
+      "text_vi": "Chào bạn.",
+      "center_x": 0.49930555555555556,
+      "center_y": 0.735546875,
+      "line_count": 1,
+      "reviewed_index": 1
+    },
+    {
+      "start": 1.6,
+      "end": 3,
+      "text_zh": "我想组装一台2,500左右",
+      "text_vi": "Máy 2.500 tệ.",
+      "center_x": 0.49930555555555556,
+      "center_y": 0.7542968750000001,
+      "line_count": 2,
+      "reviewed_index": 2
+    },
+    {
+      "start": 3,
+      "end": 4.6,
+      "text_zh": "打游戏的电脑你这有吗",
+      "text_vi": "Có máy chơi game không?",
+      "center_x": 0.49930555555555556,
+      "center_y": 0.7542968750000001,
+      "line_count": 2,
+      "reviewed_index": 3
+    },
+    {
+      "start": 4.6,
+      "end": 7.6,
+      "text_zh": "有啊你有显示器吗",
+      "text_vi": "Có chứ. Bạn có màn hình chưa?",
+      "center_x": 0.49930555555555556,
+      "center_y": 0.7542968750000001,
+      "line_count": 2,
+      "reviewed_index": 4
+    },
+    {
+      "start": 7.6,
+      "end": 8.6,
+      "text_zh": "有就主机就行",
+      "text_vi": "Có, lấy cây.",
+      "center_x": 0.49930555555555556,
+      "center_y": 0.7542968750000001,
+      "line_count": 2,
+      "reviewed_index": 5
+    },
+    {
+      "start": 8.6,
+      "end": 10,
+      "text_zh": "主机就行啊对",
+      "text_vi": "Chỉ thùng máy? Đúng.",
+      "center_x": 0.49930555555555556,
+      "center_y": 0.7542968750000001,
+      "line_count": 2,
+      "reviewed_index": 6
+    },
+    {
+      "start": 10,
+      "end": 11.6,
+      "text_zh": "那你平常都玩哪些游戏啊",
+      "text_vi": "Bạn hay chơi game gì?",
+      "center_x": 0.49930555555555556,
+      "center_y": 0.7542968750000001,
+      "line_count": 2,
+      "reviewed_index": 7
+    },
+    {
+      "start": 11.6,
+      "end": 13.6,
+      "text_zh": "打瓦还有打一些三角洲",
+      "text_vi": "Valorant với Delta Force.",
+      "center_x": 0.49930555555555556,
+      "center_y": 0.7542968750000001,
+      "line_count": 2,
+      "reviewed_index": 8
+    },
+    {
+      "start": 13.6,
+      "end": 15.05,
+      "text_zh": "哦就打瓦打三角洲",
+      "text_vi": "Hai game đó.",
+      "center_x": 0.49930555555555556,
+      "center_y": 0.7542968750000001,
+      "line_count": 2,
+      "reviewed_index": 9
+    },
+    {
+      "start": 15.05,
+      "end": 15.5,
+      "text_zh": "打三角洲",
+      "text_vi": "Delta.",
+      "center_x": 0.49930555555555556,
+      "center_y": 0.735546875,
+      "line_count": 1,
+      "reviewed_index": 10
+    },
+    {
+      "start": 15.5,
+      "end": 17,
+      "text_zh": "2,500左右预算呗",
+      "text_vi": "2.500 tệ?",
+      "center_x": 0.49930555555555556,
+      "center_y": 0.7542968750000001,
+      "line_count": 2,
+      "reviewed_index": 11
+    },
+    {
+      "start": 17,
+      "end": 17.3,
+      "text_zh": "对",
+      "text_vi": "Đúng.",
+      "center_x": 0.49930555555555556,
+      "center_y": 0.735546875,
+      "line_count": 1,
+      "reviewed_index": 12
+    },
+    {
+      "start": 17.85,
+      "end": 19.5,
+      "text_zh": "行那给你装呗",
+      "text_vi": "Được, để tôi ráp.",
+      "center_x": 0.49930555555555556,
+      "center_y": 0.7542968750000001,
+      "line_count": 2,
+      "reviewed_index": 13
+    },
+    {
+      "start": 19.5,
+      "end": 20.25,
+      "text_zh": "可以",
+      "text_vi": "Được.",
+      "center_x": 0.49930555555555556,
+      "center_y": 0.735546875,
+      "line_count": 1,
+      "reviewed_index": 14
+    },
+    {
+      "start": 22.433333333333334,
+      "end": 24,
+      "text_zh": "听说紫色盆更有韵味",
+      "text_vi": "Nghe bảo chậu tím có duyên.",
+      "center_x": 0.5013888888888889,
+      "center_y": 0.7542968750000001,
+      "line_count": 2,
+      "reviewed_index": 15
+    },
+    {
+      "start": 24,
+      "end": 26,
+      "text_zh": "来个H61吧",
+      "text_vi": "Lấy H61 nhé.",
+      "center_x": 0.5013888888888889,
+      "center_y": 0.735546875,
+      "line_count": 1,
+      "reviewed_index": 16
+    },
+    {
+      "start": 30.8,
+      "end": 31.4,
+      "text_zh": "可以",
+      "text_vi": "Được.",
+      "center_x": 0.5013888888888889,
+      "center_y": 0.735546875,
+      "line_count": 1,
+      "reviewed_index": 17
+    },
+    {
+      "start": 31.4,
+      "end": 32.8,
+      "text_zh": "再来一个固态",
+      "text_vi": "Thêm một ổ SSD.",
+      "center_x": 0.5013888888888889,
+      "center_y": 0.735546875,
+      "line_count": 1,
+      "reviewed_index": 18
+    },
+    {
+      "start": 34.2,
+      "end": 36.2,
+      "text_zh": "500G打瓦够了 250",
+      "text_vi": "500G đủ chơi Valorant, 250.",
+      "center_x": 0.5826388888888889,
+      "center_y": 0.735546875,
+      "line_count": 2,
+      "reviewed_index": 19
+    },
+    {
+      "start": 39,
+      "end": 40.2,
+      "text_zh": "再来颗CPU",
+      "text_vi": "Thêm CPU.",
+      "center_x": 0.49583333333333335,
+      "center_y": 0.7359375,
+      "line_count": 1,
+      "reviewed_index": 20
+    },
+    {
+      "start": 41.63333333333333,
+      "end": 42.6,
+      "text_zh": "i3肯定不够用",
+      "text_vi": "i3 không đủ.",
+      "center_x": 0.5006944444444444,
+      "center_y": 0.7546875000000001,
+      "line_count": 2,
+      "reviewed_index": 21
+    },
+    {
+      "start": 42.6,
+      "end": 44.2,
+      "text_zh": "来个i5 12400f",
+      "text_vi": "Lấy i5 12400F.",
+      "center_x": 0.5006944444444444,
+      "center_y": 0.7359375,
+      "line_count": 1,
+      "reviewed_index": 22
+    },
+    {
+      "start": 48.03333333333333,
+      "end": 50,
+      "text_zh": "再来两根内存条",
+      "text_vi": "Thêm hai thanh RAM.",
+      "center_x": 0.5,
+      "center_y": 0.7359375,
+      "line_count": 1,
+      "reviewed_index": 23
+    },
+    {
+      "start": 50.96666666666667,
+      "end": 53,
+      "text_zh": "C14.3200 8G",
+      "text_vi": "C14, bus 3K2.",
+      "center_x": 0.4875,
+      "center_y": 0.73515625,
+      "line_count": 1,
+      "reviewed_index": 24
+    },
+    {
+      "start": 53,
+      "end": 54.1,
+      "text_zh": "组成双通道 16G",
+      "text_vi": "8G đôi, 16G.",
+      "center_x": 0.4875,
+      "center_y": 0.73515625,
+      "line_count": 1,
+      "reviewed_index": 25
+    },
+    {
+      "start": 55,
+      "end": 57.833333333333336,
+      "text_zh": "帧数提高20帧",
+      "text_vi": "Tăng thêm 20 FPS.",
+      "center_x": 0.4986111111111111,
+      "center_y": 0.75390625,
+      "line_count": 2,
+      "reviewed_index": 26
+    },
+    {
+      "start": 58.96666666666667,
+      "end": 60,
+      "text_zh": "再来个显卡",
+      "text_vi": "Thêm card.",
+      "center_x": 0.5013888888888889,
+      "center_y": 0.73515625,
+      "line_count": 1,
+      "reviewed_index": 27
+    },
+    {
+      "start": 60.24,
+      "end": 62.1,
+      "text_zh": "有什么好的显卡给你",
+      "text_vi": "Card nào ngon đây?",
+      "center_x": 0.5013888888888889,
+      "center_y": 0.75390625,
+      "line_count": 2,
+      "reviewed_index": 28
+    },
+    {
+      "start": 64.2,
+      "end": 65.2,
+      "text_zh": "不行",
+      "text_vi": "Không được.",
+      "center_x": 0.47152777777777777,
+      "center_y": 0.641015625,
+      "line_count": 1,
+      "reviewed_index": 29
+    },
+    {
+      "start": 66.8,
+      "end": 68.8,
+      "text_zh": "6750 G R E超预算来",
+      "text_vi": "6750 GRE vượt ngân sách.",
+      "center_x": 0.5006944444444444,
+      "center_y": 0.7546875000000001,
+      "line_count": 2,
+      "reviewed_index": 30
+    },
+    {
+      "start": 69.8,
+      "end": 71.8,
+      "text_zh": "我自用的神卡",
+      "text_vi": "Card thần thánh tôi đang dùng.",
+      "center_x": 0.5006944444444444,
+      "center_y": 0.7546875000000001,
+      "line_count": 2,
+      "reviewed_index": 31
+    },
+    {
+      "start": 81.9,
+      "end": 83.96666666666667,
+      "text_zh": "小杨一手自用",
+      "text_vi": "Tiểu Dương tự dùng, chính chủ.",
+      "center_x": 0.49930555555555556,
+      "center_y": 0.7542968750000001,
+      "line_count": 2,
+      "reviewed_index": 32
+    },
+    {
+      "start": 84.83333333333333,
+      "end": 86.5,
+      "text_zh": "星星的我都不敢用太好",
+      "text_vi": "Mới tinh, ngon quá rén.",
+      "center_x": 0.5013888888888889,
+      "center_y": 0.7542968750000001,
+      "line_count": 2,
+      "reviewed_index": 33
+    },
+    {
+      "start": 86.5,
+      "end": 88.5,
+      "text_zh": "一般都用你们用剩的",
+      "text_vi": "Toàn dùng đồ thừa của khách.",
+      "center_x": 0.5013888888888889,
+      "center_y": 0.7542968750000001,
+      "line_count": 2,
+      "reviewed_index": 34
+    },
+    {
+      "start": 88.5,
+      "end": 90,
+      "text_zh": "1080 不错",
+      "text_vi": "1080 ổn.",
+      "center_x": 0.5013888888888889,
+      "center_y": 0.735546875,
+      "line_count": 1,
+      "reviewed_index": 35
+    },
+    {
+      "start": 92.2,
+      "end": 93.3,
+      "text_zh": "750",
+      "text_vi": "750",
+      "center_x": 0.4986111111111111,
+      "center_y": 0.73515625,
+      "line_count": 1,
+      "reviewed_index": 36
+    },
+    {
+      "start": 96.3,
+      "end": 97,
+      "text_zh": "SO1电源600瓦",
+      "text_vi": "Nguồn SO1 600W.",
+      "center_x": 0.4201388888888889,
+      "center_y": 0.73515625,
+      "line_count": 1,
+      "reviewed_index": 37
+    },
+    {
+      "start": 101.25,
+      "end": 102.5,
+      "text_zh": "峰值750瓦",
+      "text_vi": "Đỉnh 750W.",
+      "center_x": 0.4201388888888889,
+      "center_y": 0.73515625,
+      "line_count": 1,
+      "reviewed_index": 38
+    },
+    {
+      "start": 102.5,
+      "end": 103.2,
+      "text_zh": "就你了",
+      "text_vi": "Chọn nó.",
+      "center_x": 0.4201388888888889,
+      "center_y": 0.73515625,
+      "line_count": 1,
+      "reviewed_index": 39
+    },
+    {
+      "start": 105.75,
+      "end": 106.9,
+      "text_zh": "配件已挑齐了",
+      "text_vi": "Đủ linh kiện.",
+      "center_x": 0.5006944444444444,
+      "center_y": 0.75390625,
+      "line_count": 2,
+      "reviewed_index": 40
+    },
+    {
+      "start": 107,
+      "end": 108,
+      "text_zh": "哎小妹",
+      "text_vi": "Này em.",
+      "center_x": 0.5006944444444444,
+      "center_y": 0.73515625,
+      "line_count": 1,
+      "reviewed_index": 41
+    },
+    {
+      "start": 108,
+      "end": 109,
+      "text_zh": "你机箱是要白色的",
+      "text_vi": "Vỏ trắng",
+      "center_x": 0.5006944444444444,
+      "center_y": 0.73515625,
+      "line_count": 1,
+      "reviewed_index": 42
+    },
+    {
+      "start": 109,
+      "end": 109.75,
+      "text_zh": "还是黑色的",
+      "text_vi": "hay đen?",
+      "center_x": 0.5006944444444444,
+      "center_y": 0.73515625,
+      "line_count": 1,
+      "reviewed_index": 43
+    },
+    {
+      "start": 109.75,
+      "end": 111.25,
+      "text_zh": "黑色的吧耐脏一点",
+      "text_vi": "Đen, đỡ lộ bẩn.",
+      "center_x": 0.5006944444444444,
+      "center_y": 0.73515625,
+      "line_count": 1,
+      "reviewed_index": 44
+    },
+    {
+      "start": 111.25,
+      "end": 112.25,
+      "text_zh": "好没问题",
+      "text_vi": "OK.",
+      "center_x": 0.5006944444444444,
+      "center_y": 0.73515625,
+      "line_count": 1,
+      "reviewed_index": 45
+    },
+    {
+      "start": 112.25,
+      "end": 114,
+      "text_zh": "黑色的那就来个海景房喽",
+      "text_vi": "Lấy vỏ bể cá đen.",
+      "center_x": 0.5006944444444444,
+      "center_y": 0.75390625,
+      "line_count": 2,
+      "reviewed_index": 46
+    },
+    {
+      "start": 114,
+      "end": 117,
+      "text_zh": "可以来个海景房吧",
+      "text_vi": "OK, vỏ bể cá.",
+      "center_x": 0.5006944444444444,
+      "center_y": 0.73515625,
+      "line_count": 1,
+      "reviewed_index": 47
+    },
+    {
+      "start": 117,
+      "end": 118.9,
+      "text_zh": "黑色海景房",
+      "text_vi": "Vỏ bể cá đen.",
+      "center_x": 0.5006944444444444,
+      "center_y": 0.73515625,
+      "line_count": 1,
+      "reviewed_index": 48
+    },
+    {
+      "start": 120,
+      "end": 121.56666666666666,
+      "text_zh": "海景房都上了",
+      "text_vi": "Vỏ bể cá lên rồi.",
+      "center_x": 0.4986111111111111,
+      "center_y": 0.73515625,
+      "line_count": 1,
+      "reviewed_index": 49
+    },
+    {
+      "start": 122.7,
+      "end": 124,
+      "text_zh": "60 海景房都上了",
+      "text_vi": "60, bể cá!",
+      "center_x": 0.49722222222222223,
+      "center_y": 0.7542968750000001,
+      "line_count": 2,
+      "reviewed_index": 50
+    },
+    {
+      "start": 124,
+      "end": 126,
+      "text_zh": "必须得给你来个几个风扇",
+      "text_vi": "Thêm vài quạt.",
+      "center_x": 0.49722222222222223,
+      "center_y": 0.7542968750000001,
+      "line_count": 2,
+      "reviewed_index": 51
+    },
+    {
+      "start": 126,
+      "end": 128,
+      "text_zh": "再来5把风扇吧",
+      "text_vi": "Thêm 5 quạt.",
+      "center_x": 0.49722222222222223,
+      "center_y": 0.735546875,
+      "line_count": 1,
+      "reviewed_index": 52
+    },
+    {
+      "start": 128.75,
+      "end": 129.75,
+      "text_zh": "散热更好",
+      "text_vi": "Mát hơn.",
+      "center_x": 0.49722222222222223,
+      "center_y": 0.735546875,
+      "line_count": 1,
+      "reviewed_index": 53
+    },
+    {
+      "start": 131.5,
+      "end": 132,
+      "text_zh": "我配件都已拿起",
+      "text_vi": "Đủ đồ.",
+      "center_x": 0.5,
+      "center_y": 0.753515625,
+      "line_count": 2,
+      "reviewed_index": 54
+    },
+    {
+      "start": 132,
+      "end": 134,
+      "text_zh": "还差一个散热",
+      "text_vi": "Thiếu tản nhiệt.",
+      "center_x": 0.5,
+      "center_y": 0.753515625,
+      "line_count": 2,
+      "reviewed_index": 55
+    },
+    {
+      "start": 134.5,
+      "end": 137.5,
+      "text_zh": "散热来一个四铜管吧",
+      "text_vi": "Lấy tản bốn ống đồng.",
+      "center_x": 0.4986111111111111,
+      "center_y": 0.755078125,
+      "line_count": 2,
+      "reviewed_index": 56
+    },
+    {
+      "start": 137.5,
+      "end": 139,
+      "text_zh": "压他是绰绰有余",
+      "text_vi": "Cân dư sức.",
+      "center_x": 0.4986111111111111,
+      "center_y": 0.736328125,
+      "line_count": 1,
+      "reviewed_index": 57
+    },
+    {
+      "start": 139,
+      "end": 140.5,
+      "text_zh": "够了",
+      "text_vi": "Đủ rồi.",
+      "center_x": 0.4986111111111111,
+      "center_y": 0.736328125,
+      "line_count": 1,
+      "reviewed_index": 58
+    },
+    {
+      "start": 141.1,
+      "end": 143.5,
+      "text_zh": "那接下来我们就开始装机吧",
+      "text_vi": "Bắt đầu ráp máy.",
+      "center_x": 0.49930555555555556,
+      "center_y": 0.75390625,
+      "line_count": 2,
+      "reviewed_index": 59
+    },
+    {
+      "start": 147,
+      "end": 149,
+      "text_zh": "驱动已经打上最新的了",
+      "text_vi": "Đã cài driver mới nhất.",
+      "center_x": 0.4979166666666667,
+      "center_y": 0.75390625,
+      "line_count": 2,
+      "reviewed_index": 60
+    },
+    {
+      "start": 149,
+      "end": 150.5,
+      "text_zh": "紫色更有韵味",
+      "text_vi": "Màu tím duyên hơn.",
+      "center_x": 0.4979166666666667,
+      "center_y": 0.73515625,
+      "line_count": 1,
+      "reviewed_index": 61
+    },
+    {
+      "start": 150.96666666666667,
+      "end": 152,
+      "text_zh": "OK小妹",
+      "text_vi": "OK em.",
+      "center_x": 0.5006944444444444,
+      "center_y": 0.735546875,
+      "line_count": 1,
+      "reviewed_index": 62
+    },
+    {
+      "start": 152,
+      "end": 153,
+      "text_zh": "已经装好了",
+      "text_vi": "Ráp xong.",
+      "center_x": 0.5006944444444444,
+      "center_y": 0.735546875,
+      "line_count": 1,
+      "reviewed_index": 63
+    },
+    {
+      "start": 153,
+      "end": 154,
+      "text_zh": "好了多少钱总共",
+      "text_vi": "Tổng bao nhiêu?",
+      "center_x": 0.5006944444444444,
+      "center_y": 0.7542968750000001,
+      "line_count": 2,
+      "reviewed_index": 64
+    },
+    {
+      "start": 154,
+      "end": 157.3,
+      "text_zh": "一共2,180",
+      "text_vi": "Tổng 2.180.",
+      "center_x": 0.5006944444444444,
+      "center_y": 0.735546875,
+      "line_count": 1,
+      "reviewed_index": 65
+    },
+    {
+      "start": 159.76666666666668,
+      "end": 161,
+      "text_zh": "驱动都已经给你打好了",
+      "text_vi": "Driver cài đủ rồi.",
+      "center_x": 0.4979166666666667,
+      "center_y": 0.753515625,
+      "line_count": 2,
+      "reviewed_index": 66
+    },
+    {
+      "start": 161,
+      "end": 163,
+      "text_zh": "拿回家就可以玩了",
+      "text_vi": "Mang về là chơi được.",
+      "center_x": 0.4979166666666667,
+      "center_y": 0.753515625,
+      "line_count": 2,
+      "reviewed_index": 67
+    },
+    {
+      "start": 163.5,
+      "end": 164,
+      "text_zh": "有没有装的箱子",
+      "text_vi": "Có hộp không?",
+      "center_x": 0.5,
+      "center_y": 0.735546875,
+      "line_count": 1,
+      "reviewed_index": 68
+    },
+    {
+      "start": 164.5,
+      "end": 165.8,
+      "text_zh": "装的箱子啊来",
+      "text_vi": "Hộp à? Đây.",
+      "center_x": 0.5,
+      "center_y": 0.735546875,
+      "line_count": 1,
+      "reviewed_index": 69
+    },
+    {
+      "start": 170,
+      "end": 170.5,
+      "text_zh": "你放这吧",
+      "text_vi": "Để đây.",
+      "center_x": 0.5013888888888889,
+      "center_y": 0.735546875,
+      "line_count": 1,
+      "reviewed_index": 70
+    },
+    {
+      "start": 170.5,
+      "end": 171.5,
+      "text_zh": "我给你打包好",
+      "text_vi": "Anh gói cho.",
+      "center_x": 0.5013888888888889,
+      "center_y": 0.735546875,
+      "line_count": 1,
+      "reviewed_index": 71
+    },
+    {
+      "start": 171.5,
+      "end": 172.1,
+      "text_zh": "行",
+      "text_vi": "Được.",
+      "center_x": 0.5013888888888889,
+      "center_y": 0.735546875,
+      "line_count": 1,
+      "reviewed_index": 72
+    },
+    {
+      "start": 181.1,
+      "end": 182,
+      "text_zh": "来OK",
+      "text_vi": "Rồi, OK.",
+      "center_x": 0.5041666666666667,
+      "center_y": 0.7359375,
+      "line_count": 1,
+      "reviewed_index": 73
+    },
+    {
+      "start": 184.83333333333334,
+      "end": 187,
+      "text_zh": "OK啦拿去吧",
+      "text_vi": "OK, mang đi.",
+      "center_x": 0.5020833333333333,
+      "center_y": 0.736328125,
+      "line_count": 1,
+      "reviewed_index": 74
+    },
+    {
+      "start": 187,
+      "end": 190.05,
+      "text_zh": "成功送走一台神机拜拜",
+      "text_vi": "Tiễn xong dàn máy chiến. Bye!",
+      "center_x": 0.5020833333333333,
+      "center_y": 0.755078125,
+      "line_count": 2,
+      "reviewed_index": 75
+    },
+    {
+      "start": 190.2,
+      "end": 190.966667,
+      "text_zh": "拜拜",
+      "text_vi": "Bye!",
+      "center_x": 0.5020833333333333,
+      "center_y": 0.736328125,
+      "line_count": 1,
+      "reviewed_index": 76
+    }
+  ],
+  "retry_index": 7,
+  "retry_parts": [
+    {
+      "part": 0,
+      "core_start": 105,
+      "core_end": 112.5,
+      "segment_start": 103,
+      "segment_end": 114.5,
+      "model_cues": 7,
+      "accepted_cues": 6,
+      "uri": "gs://YOUR_GCP_PROJECT-media-sg/desub/_lab/douyin-7558369768110116134-full-visub-20260713-133419/chunked_v5/retry_07_0.mp4"
+    },
+    {
+      "part": 1,
+      "core_start": 112.5,
+      "core_end": 120,
+      "segment_start": 110.5,
+      "segment_end": 122,
+      "model_cues": 6,
+      "accepted_cues": 5,
+      "uri": "gs://YOUR_GCP_PROJECT-media-sg/desub/_lab/douyin-7558369768110116134-full-visub-20260713-133419/chunked_v5/retry_07_1.mp4"
+    }
+  ],
+  "parent_cue_object": "visub_cues_chunked_v5.json",
+  "finalization": {
+    "version": "v8-width-gated",
+    "max_lines": 2,
+    "wrap_chars": 20,
+    "safe_margin_pixels": 24,
+    "pixel_width_gate": true,
+    "two_line_y_shift_ratio": 0.01875,
+    "dropped_source_indexes": [
+      37
+    ],
+    "merged_source_indexes": [
+      [
+        4,
+        5
+      ],
+      [
+        46,
+        47
+      ],
+      [
+        48,
+        49
+      ]
+    ],
+    "manual_split_source_indexes": [
+      74
+    ],
+    "vertical_realign_source_indexes": [
+      39,
+      40,
+      41
+    ]
+  },
+  "translation_metadata": {
+    "translator_model": "gpt-5.6-terra",
+    "semantic_auditor_model": "gpt-5.6-sol",
+    "source_input": "tmp/integrated_desub_probe_frames/visub_cues_final_v7.json",
+    "target_language": "vi",
+    "narrator": "BV075",
+    "direct_rate": "1.5000",
+    "timing_compaction": {
+      "version": "v4-probed-fixed-rate",
+      "independent_reviews": 3,
+      "baseline_attempt": "0006",
+      "baseline_tts_manifest_sha256": "196de582d2d189cf7e714d034a8ba14e91cdd55ef6c7464ef313f95387ec2813",
+      "tts_probe_execution": "integrated-desub-tts-probe-v1-95bz9",
+      "probed_worst_lag_seconds": 0.38401360544217766,
+      "probed_tail_margin_seconds": 0.21464885941043121,
+      "max_lag_seconds": 0.6,
+      "voice_speed_changed": false,
+      "meaning_and_humor_required": true
+    }
+  }
+}

@@ -1,0 +1,12 @@
+steps:
+- name: gcr.io/cloud-builders/docker
+  args:
+  - build
+  - -f
+  - container_long/Dockerfile.thumbnail
+  - -t
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/long-thumbnail-generator:prod
+  - .
+images:
+- us-docker.pkg.dev/$PROJECT_ID/douyin/long-thumbnail-generator:prod
+timeout: 1200s

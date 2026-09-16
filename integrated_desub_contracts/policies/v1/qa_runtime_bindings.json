@@ -1,0 +1,61 @@
+{
+  "policy_name": "desub_qa_runtime_bindings",
+  "version": "1.0.0",
+  "status": "blocked_no_approved_production_runtime",
+  "evidence_date": "2026-07-23",
+  "required_processing_jurisdiction": "Singapore",
+  "candidate_endpoint_identifiers_not_approved": {
+    "google_vertex": "asia-southeast1",
+    "openai_regional_storage": "sg.api.openai.com"
+  },
+  "required_data_controls": {
+    "regional_processing": true,
+    "regional_transient_storage": true,
+    "training_on_customer_content": false,
+    "short_retention": true,
+    "cache_disabled_unless_explicitly_approved": true,
+    "full_source_video_default_allowed": false
+  },
+  "roles": {
+    "clean_a": null,
+    "clean_b": null,
+    "clean_c": null,
+    "clean_final_sol": null,
+    "translation_generator": null,
+    "translation_semantic_preflight": null,
+    "translation_style_preflight": null,
+    "translation_semantics": null,
+    "translation_style": null,
+    "dub_audio_video": null,
+    "dub_final_sol": null
+  },
+  "binding_shape": {
+    "provider": "required",
+    "processing_jurisdiction": "must equal Singapore and be proven by provider-specific evidence",
+    "regional_endpoint": "required",
+    "model_id": "required",
+    "model_version_or_snapshot": "required",
+    "service_identity": "required",
+    "auth_secret_reference_name_only": "required",
+    "request_schema_sha256": "required",
+    "response_schema_sha256": "required",
+    "timeout_seconds": "required",
+    "retry_attempts_max": 2,
+    "quota_and_rate_limit_evidence": "required",
+    "response_id_field": "required",
+    "cost_telemetry_mapping": "required",
+    "callable_probe_object_and_sha256": "required",
+    "data_control_evidence": "required"
+  },
+  "candidate_findings": {
+    "openai_gpt_5_6": "API model family exists, but documented direct inputs are text/image rather than audio/video; Singapore regional processing and target-project ZDR/quota/callability are also unproven.",
+    "vertex_gemini_2_5_flash": "Singapore ML processing is documented, but it is not GPT-5.6 Sol and target-project callability/quota/configuration are unproven."
+  },
+  "unresolved_gate_a_bindings": [
+    "exact callable runtime and quota for every role",
+    "Singapore processing and transient-storage evidence",
+    "no-training, retention, logging and cache configuration",
+    "audio/video-capable path for final Dub verifier C or an explicitly approved derived-evidence contract revision"
+  ],
+  "decision_record": "docs/DESUB_QA_RUNTIME_DECISION.md"
+}

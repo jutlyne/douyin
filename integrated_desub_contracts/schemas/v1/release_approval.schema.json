@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.desub.local/v1/release_approval.schema.json",
+  "title": "Signed integrated release approval envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["payload", "signature"],
+  "properties": {
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version", "release_approval_id", "issued_at", "expires_at", "attempt",
+        "clean_approval_id", "clean_approval", "source", "clean", "clean_manifest",
+        "source_cue_manifest", "source_cue_collection_root", "translation_attempts",
+        "translation_preflight_approvals", "tts_attempts", "cue_ledger", "dubbed",
+        "dub_manifest", "no_vietsub_control", "vietsub_alpha_mask", "mix_report",
+        "stem_pcm", "clean_contract_sha256", "dub_contract_sha256",
+        "render_policy_sha256", "style_policy_sha256", "mix_policy_sha256",
+        "clean_policy", "dub_policy", "clean_machine_report", "dub_machine_report",
+        "final_verdicts", "controller_signer_principal"
+      ],
+      "properties": {
+        "schema_version": {"const": "1"},
+        "release_approval_id": {"$ref": "common.schema.json#/$defs/releaseApprovalId"},
+        "issued_at": {"$ref": "common.schema.json#/$defs/rfc3339"},
+        "expires_at": {"$ref": "common.schema.json#/$defs/rfc3339"},
+        "attempt": {"$ref": "common.schema.json#/$defs/attemptBinding"},
+        "clean_approval_id": {"$ref": "common.schema.json#/$defs/cleanApprovalId"},
+        "clean_approval": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "source": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "clean": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "clean_manifest": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "source_cue_manifest": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "source_cue_collection_root": {"$ref": "common.schema.json#/$defs/sha256"},
+        "translation_attempts": {"$ref": "#/$defs/nonEmptyObjectRefs"},
+        "translation_preflight_approvals": {
+          "$ref": "#/$defs/nonEmptyJsonObjectRefs"
+        },
+        "tts_attempts": {"$ref": "#/$defs/nonEmptyObjectRefs"},
+        "cue_ledger": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "dubbed": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "dub_manifest": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "no_vietsub_control": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "vietsub_alpha_mask": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "mix_report": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "stem_pcm": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["clean_input", "bed", "ducked_bed", "voice", "premaster"],
+          "properties": {
+            "clean_input": {"$ref": "common.schema.json#/$defs/objectRef"},
+            "bed": {"$ref": "common.schema.json#/$defs/objectRef"},
+            "ducked_bed": {"$ref": "common.schema.json#/$defs/objectRef"},
+            "voice": {"$ref": "common.schema.json#/$defs/objectRef"},
+            "premaster": {"$ref": "common.schema.json#/$defs/objectRef"}
+          }
+        },
+        "clean_contract_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+        "dub_contract_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+        "render_policy_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+        "style_policy_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+        "mix_policy_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+        "clean_policy": {"$ref": "common.schema.json#/$defs/policyRef"},
+        "dub_policy": {"$ref": "common.schema.json#/$defs/policyRef"},
+        "clean_machine_report": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "dub_machine_report": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "final_verdicts": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "prefixItems": [
+            {"$ref": "#/$defs/finalSemantics"},
+            {"$ref": "#/$defs/finalStyle"},
+            {"$ref": "#/$defs/finalAudioVideo"},
+            {"$ref": "#/$defs/finalSol"}
+          ],
+          "items": false
+        },
+        "controller_signer_principal": {
+          "type": "string",
+          "pattern": "^serviceAccount:[^@\\s]+@[^@\\s]+\\.iam\\.gserviceaccount\\.com$"
+        }
+      }
+    },
+    "signature": {"$ref": "common.schema.json#/$defs/kmsSignature"}
+  },
+  "$defs": {
+    "nonEmptyObjectRefs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "common.schema.json#/$defs/objectRef"}
+    },
+    "nonEmptyJsonObjectRefs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "allOf": [
+          {"$ref": "common.schema.json#/$defs/objectRef"},
+          {"properties": {"content_type": {"const": "application/json"}}}
+        ]
+      }
+    },
+    "verdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "object", "model", "bindings"],
+      "properties": {
+        "role": {"type": "string"},
+        "object": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "model": {"$ref": "common.schema.json#/$defs/modelIdentity"},
+        "bindings": {"$ref": "common.schema.json#/$defs/releaseBindings"}
+      }
+    },
+    "finalSemantics": {"allOf": [{"$ref": "#/$defs/verdict"}, {"properties": {"role": {"const": "translation_semantics"}}}]},
+    "finalStyle": {"allOf": [{"$ref": "#/$defs/verdict"}, {"properties": {"role": {"const": "translation_style"}}}]},
+    "finalAudioVideo": {"allOf": [{"$ref": "#/$defs/verdict"}, {"properties": {"role": {"const": "dub_audio_video"}}}]},
+    "finalSol": {"allOf": [{"$ref": "#/$defs/verdict"}, {"properties": {"role": {"const": "dub_final_sol"}}}]}
+  },
+  "$comment": "A semantic validator must require the release list to contain every distinct translation preflight approval referenced by every TTS attempt and selected cue-ledger entry, reject missing/orphan/duplicate approvals, and load each approval's two bound pass verdicts. Family attempt/cue/candidate/policy hashes and ObjectRef generations/SHA values must match transitively."
+}

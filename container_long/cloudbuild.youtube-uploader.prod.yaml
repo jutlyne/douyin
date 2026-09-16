@@ -1,0 +1,13 @@
+steps:
+- name: gcr.io/cloud-builders/docker
+  args:
+  - build
+  - --pull
+  - -f
+  - container_long/Dockerfile.youtube-uploader
+  - -t
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/long-youtube-uploader:prod
+  - .
+images:
+- us-docker.pkg.dev/$PROJECT_ID/douyin/long-youtube-uploader:prod
+timeout: 1200s

@@ -1,0 +1,86 @@
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+USER root
+
+ENV PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PATH=/opt/integrated-venv/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/sbin:/sbin:/bin \
+    PYTHONPATH=/app:/app/experiments/desub:/opt/video-subtitle-remover \
+    DESUB_COMPARE_PADDLE=false \
+    DESUB_ALLOW_RUNTIME_MODEL_DOWNLOAD=false \
+    DESUB_EASYOCR_GPU=true \
+    EASYOCR_MODEL_DIR=/models/easyocr \
+    MPLCONFIGDIR=/tmp/matplotlib \
+    XDG_CACHE_HOME=/tmp/.cache
+
+RUN apk add --no-cache \
+        ca-certificates \
+        ffmpeg \
+        fontconfig \
+        ttf-dejavu \
+    && apk add --no-cache --virtual .integrated-build-deps \
+        curl \
+        git
+
+WORKDIR /app
+
+RUN mkdir -p /app/fonts \
+    && font_path="$(fc-match -f '%{file}\n' 'DejaVu Sans:style=Bold' | head -n 1)" \
+    && test -n "${font_path}" \
+    && cp "${font_path}" /app/fonts/DejaVuSans-Bold.ttf
+
+COPY integrated_desub_runtime/requirements-worker.txt /app/requirements-worker.txt
+
+# Install only wheels.  Torch 2.13 fixes the advisory affecting 2.12.1 while
+# cu126 remains compatible with Cloud Run L4's CUDA 12.x driver family.
+RUN python -m venv --system-site-packages /opt/integrated-venv \
+    && python -m pip install --only-binary=:all: \
+        --index-url https://download.pytorch.org/whl/cu126 \
+        torch==2.13.0 \
+        torchvision==0.28.0 \
+    && python -m pip install --only-binary=:all: \
+        --index-url https://pypi.org/simple \
+        -r /app/requirements-worker.txt \
+    && python -m pip check
+
+ARG VSR_COMMIT=3f3b061a53f770809db1ab975ae4ebcf5876edc3
+RUN git clone --branch 1.4.0 --depth 1 \
+        https://github.com/YaoFANGUK/video-subtitle-remover.git \
+        /opt/video-subtitle-remover \
+    && test "$(git -C /opt/video-subtitle-remover rev-parse HEAD)" = "${VSR_COMMIT}" \
+    && rm -rf /opt/video-subtitle-remover/.git \
+    && rm -rf /opt/video-subtitle-remover/backend/inpaint/propainter* \
+    && rm -rf /opt/video-subtitle-remover/backend/models/propainter
+
+COPY experiments/desub/prototype.py /app/experiments/desub/prototype.py
+
+RUN python /app/experiments/desub/prototype.py \
+        --patch-vsr /opt/video-subtitle-remover \
+    && python /app/experiments/desub/prototype.py \
+        --bake-models /opt/video-subtitle-remover \
+    && mkdir -p /app/security \
+    && find /models/easyocr /opt/video-subtitle-remover/backend/models \
+        -type f -exec sha256sum {} \; \
+        | sort > /app/security/model-sha256.txt
+
+COPY integrated_desub_runtime/cloud_pipeline_job.py /app/integrated_desub_runtime/cloud_pipeline_job.py
+COPY integrated_desub_runtime/__init__.py /app/integrated_desub_runtime/__init__.py
+COPY integrated_desub_runtime/tts_mix.py /app/integrated_desub_runtime/tts_mix.py
+COPY container_short/__init__.py /app/container_short/__init__.py
+COPY container_short/steps/__init__.py /app/container_short/steps/__init__.py
+COPY container_short/steps/capcut_tts.py /app/container_short/steps/capcut_tts.py
+COPY container_short/steps/ffmpeg_ops.py /app/container_short/steps/ffmpeg_ops.py
+COPY container_short/steps/gcsio.py /app/container_short/steps/gcsio.py
+
+RUN ffmpeg -hide_banner -filters \
+        | grep -qE '(^|[[:space:]])drawtext([[:space:]]|$)' \
+    && test -s /app/fonts/DejaVuSans-Bold.ttf \
+    && python -c "import cv2,easyocr,google.cloud.storage,google.genai,torch,torchvision; assert torch.__version__.startswith('2.13.0'); assert torchvision.__version__.startswith('0.28.0')" \
+    && apk del .integrated-build-deps \
+    && rm -rf /root/.cache /tmp/*
+
+USER 65532
+WORKDIR /app
+
+ENTRYPOINT ["python", "/app/integrated_desub_runtime/cloud_pipeline_job.py"]

@@ -1,0 +1,79 @@
+{
+  "policy_name": "integrated_desub_input_contract",
+  "version": "1.0.0",
+  "status": "frozen",
+  "input": {
+    "request_count": 1,
+    "kind": "douyin_video_url",
+    "scheme": "https",
+    "max_url_bytes": 2048,
+    "container": "mp4",
+    "duration_seconds": {"minimum": 1, "maximum": 600},
+    "max_bytes": 1073741824,
+    "redirect_policy": "validate_every_hop_and_resolved_ip"
+  },
+  "video": {
+    "maximum_landscape": {"width": 1920, "height": 1080},
+    "maximum_portrait": {"width": 1080, "height": 1920},
+    "fps": {"minimum": 15, "maximum": 60},
+    "frame_rate_mode": "cfr_only",
+    "dynamic_range": "sdr",
+    "bit_depth": 8,
+    "rotation_metadata_degrees": 0,
+    "pts": "strictly_monotonic"
+  },
+  "audio": {
+    "required": true,
+    "stream_count": 1,
+    "codec": "aac",
+    "container_compatible": true,
+    "source_transcode_allowed": false
+  },
+  "subtitle_target": {
+    "coordinate_space": "post_rotation_output_frame_normalized_top_zero_bottom_one",
+    "membership_coordinate": "caption_baseline_y_normalized",
+    "membership_rule": "0.55<=caption_baseline_y_normalized<=0.90",
+    "bbox_intersection_or_containment_is_membership": false,
+    "y_min_inclusive": 0.55,
+    "y_max_inclusive": 0.9,
+    "role": "dialogue_caption_only",
+    "outside_band_dialogue_action": "reject_UNSUPPORTED_SUBTITLE_LAYOUT",
+    "preserve": ["watermark", "logo", "title", "product_text", "valid_non_caption_cjk"]
+  },
+  "reject_codes": {
+    "invalid_or_non_douyin_url": "INVALID_DOUYIN_URL",
+    "download_or_redirect_policy_failure": "SOURCE_REDIRECT_BLOCKED",
+    "content_too_large": "SOURCE_TOO_LARGE",
+    "mime_not_video_mp4": "SOURCE_MIME_UNSUPPORTED",
+    "container_not_mp4": "SOURCE_CONTAINER_UNSUPPORTED",
+    "duration_outside_range": "SOURCE_DURATION_UNSUPPORTED",
+    "resolution_outside_cap": "SOURCE_RESOLUTION_UNSUPPORTED",
+    "fps_outside_cap": "SOURCE_FPS_UNSUPPORTED",
+    "variable_frame_rate": "SOURCE_VFR_UNSUPPORTED",
+    "hdr_or_non_8_bit": "SOURCE_HDR_UNSUPPORTED",
+    "nonzero_rotation": "SOURCE_ROTATION_UNSUPPORTED",
+    "audio_codec_not_mp4_compatible_aac": "SOURCE_AUDIO_CODEC_UNSUPPORTED",
+    "zero_audio_streams": "DUB_SOURCE_AUDIO_REQUIRED",
+    "multiple_audio_streams": "SOURCE_MULTI_AUDIO_UNSUPPORTED",
+    "dialogue_caption_outside_supported_band": "UNSUPPORTED_SUBTITLE_LAYOUT"
+  },
+  "outputs": {
+    "internal_clean": {
+      "filename": "clean.mp4",
+      "public": false,
+      "video_codec": "h264",
+      "pixel_format": "yuv420p",
+      "crf": 18,
+      "audio": "aac_stream_copy"
+    },
+    "user_artifact": {
+      "filename": "dubbed.mp4",
+      "kind": "dubbed",
+      "only_after_release_approval": true,
+      "video_codec": "h264",
+      "pixel_format": "yuv420p",
+      "crf": 18,
+      "audio": "aac_44100_stereo"
+    }
+  }
+}

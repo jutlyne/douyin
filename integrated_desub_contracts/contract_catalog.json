@@ -1,0 +1,325 @@
+{
+  "catalog_version": "1",
+  "phase": "A",
+  "status": "blocked_not_approved",
+  "generated_at": "2026-07-27T09:28:14+07:00",
+  "hash_contract": "sha256_of_exact_raw_file_bytes",
+  "self_included": false,
+  "entries": [
+    {
+      "path": ".gitattributes",
+      "size_bytes": 188,
+      "sha256": "50593c2815aeeecea5d64273d68498ccde201daae0f6cb03a42df31fc65ab03d"
+    },
+    {
+      "path": "docs/DESUB_CLOUD_RUN_DRY_RUN.md",
+      "size_bytes": 3645,
+      "sha256": "edcb60b0be25a4cd5001c452ba6f5e42f3ab469b1b408c3106b68162c00e5b23"
+    },
+    {
+      "path": "docs/DESUB_DEPENDENCY_SECURITY_GATE.md",
+      "size_bytes": 2100,
+      "sha256": "6c5e3a95eedf6148a2c6f068208043ce581fdd2d92f70d108f132c486d1c8da2"
+    },
+    {
+      "path": "docs/DESUB_KMS_RUNBOOK.md",
+      "size_bytes": 4993,
+      "sha256": "fc112ea0e4dfeee7627caba4f752d209ddba13fd64762c907aa9600d2b0ac24f"
+    },
+    {
+      "path": "docs/DESUB_QA_RUNTIME_DECISION.md",
+      "size_bytes": 6860,
+      "sha256": "92a76f6d87204ae80adf9361a7d96ca5d08606e75216ee8782c15e950a01e44d"
+    },
+    {
+      "path": "docs/DESUB_V1_CONTRACT_ADR.md",
+      "size_bytes": 7978,
+      "sha256": "2e1387c691f68dc0f4329e7733fe8c08a7ed345c900ab074e46688f47468d57a"
+    },
+    {
+      "path": "docs/N8N_CLEAN_DESUB_PLAN.md",
+      "size_bytes": 96650,
+      "sha256": "0467c64cc1c943c7e629fea76d906b0ba2e5ccffce30d600125e9b4ee8788590"
+    },
+    {
+      "path": "integrated_desub_contracts/__init__.py",
+      "size_bytes": 3480,
+      "sha256": "86f87156cb385426ccbe4657dbce29db3207f2870f132940fc78b268ab978424"
+    },
+    {
+      "path": "integrated_desub_contracts/candidate_validation.py",
+      "size_bytes": 58410,
+      "sha256": "a2a6f027dfa9dd23cb0f2500783bc9a62c448dabe6a62d4fba202a700f5f12f4"
+    },
+    {
+      "path": "integrated_desub_contracts/enums.py",
+      "size_bytes": 19594,
+      "sha256": "10430a292db3e2f7856b70717c9322d31b5d22a2282970fb0382025898431969"
+    },
+    {
+      "path": "integrated_desub_contracts/evidence_validation.py",
+      "size_bytes": 41522,
+      "sha256": "221d325c76d4e95db153338f8f23946f78a8e2f563951f8d688a3f29a8860989"
+    },
+    {
+      "path": "integrated_desub_contracts/fixtures/v1/README.md",
+      "size_bytes": 506,
+      "sha256": "631232fbce8220daa5154eff39ccbacf00f834476193b613e64824d0ee19cbd4"
+    },
+    {
+      "path": "integrated_desub_contracts/fixtures/v1/canary_fixture_suite.json",
+      "size_bytes": 4119,
+      "sha256": "bb116a69b866b6e85c7e33eb8ce9efc83dc11027cdaf670a2325b0d1005b56c7"
+    },
+    {
+      "path": "integrated_desub_contracts/fixtures/v1/cloud_run_validate_only_template.json",
+      "size_bytes": 1052,
+      "sha256": "2aa2934224dd0b08ed6eaf3d4b4547d41e39a5c3a76d80f97c07ae55e1621797"
+    },
+    {
+      "path": "integrated_desub_contracts/fixtures/v1/jcs_golden_vectors.json",
+      "size_bytes": 1551,
+      "sha256": "4f23b298f567cf8c215caed6686db9f91df29ef9366bd138fab80db26759ed4c"
+    },
+    {
+      "path": "integrated_desub_contracts/fixtures/v1/source_cue_root_golden.json",
+      "size_bytes": 3085,
+      "sha256": "65a4f54d6b68368ab247465419f1dfa84c65b9f5f2d0dfbf5e938eb77136cbff"
+    },
+    {
+      "path": "integrated_desub_contracts/phase_a_gate_status.json",
+      "size_bytes": 4332,
+      "sha256": "67a319612c9753214078af4ab489fbeb7cb37bc823916ef39afc4e70f2bc91d2"
+    },
+    {
+      "path": "integrated_desub_contracts/policies/v1/clean_qa_policy.json",
+      "size_bytes": 4875,
+      "sha256": "e3b3d71e75919129374974c94a19067c57dd3b8e59d7402d3018efc46d5b7679"
+    },
+    {
+      "path": "integrated_desub_contracts/policies/v1/dub_mix_policy.json",
+      "size_bytes": 2103,
+      "sha256": "41e1ddce2b5f7293e82468dd9c046b51d6a869917c67115adb6610b11229b15c"
+    },
+    {
+      "path": "integrated_desub_contracts/policies/v1/dub_qa_policy.json",
+      "size_bytes": 6211,
+      "sha256": "bf5fe31e2d487e8b97fd2a3b9c16893654a33e05054ce9fc3e71cbf1dd92473c"
+    },
+    {
+      "path": "integrated_desub_contracts/policies/v1/error_semantics_policy.json",
+      "size_bytes": 23439,
+      "sha256": "13c9d984251e7360934cb362f6ce7faeafb1111a1d6a79b5141783ee915decf9"
+    },
+    {
+      "path": "integrated_desub_contracts/policies/v1/hash_preimage_contracts.json",
+      "size_bytes": 3843,
+      "sha256": "3904d067900139c8757129a8a37d16f5b3b6054d411250263a8fed0dafd987ab"
+    },
+    {
+      "path": "integrated_desub_contracts/policies/v1/input_contract.json",
+      "size_bytes": 2800,
+      "sha256": "2c42c240cece43954a6b68a94e95f5b32423ebbaf11f0f2d22af623ad46980e4"
+    },
+    {
+      "path": "integrated_desub_contracts/policies/v1/kms_allowlist.json",
+      "size_bytes": 1077,
+      "sha256": "9cf7b5570caa98569b8a1015be98dfb8bb8b7137eb7ee2bfdb43350fde600034"
+    },
+    {
+      "path": "integrated_desub_contracts/policies/v1/model_role_policy.json",
+      "size_bytes": 2601,
+      "sha256": "5aab8a0fb56f7329544f8b1048de83e4a634db293419673d9ad785ea9093f8c0"
+    },
+    {
+      "path": "integrated_desub_contracts/policies/v1/qa_runtime_bindings.json",
+      "size_bytes": 2500,
+      "sha256": "d81921ad5932a6e428b9ae423c6e59d0de7df7ca7cabb8c92cca440eb080ec05"
+    },
+    {
+      "path": "integrated_desub_contracts/policies/v1/retention_capacity_policy.json",
+      "size_bytes": 1149,
+      "sha256": "4381e34d316239bf75c3cbd9c71d7cedc0f30e05c3ee43116661fe455ac08469"
+    },
+    {
+      "path": "integrated_desub_contracts/policies/v1/source_cue_collection_root_contract.json",
+      "size_bytes": 1372,
+      "sha256": "58a543fe00fe7ddd73b02a843655b27126681812f93bdb9aaa2b54b7222d0e2f"
+    },
+    {
+      "path": "integrated_desub_contracts/policies/v1/vietsub_style_policy.json",
+      "size_bytes": 6084,
+      "sha256": "ddb12b8d1b702b2cef0b973ea2bd06cc867335b06cfe327046a2b437c0cb23ac"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/README.md",
+      "size_bytes": 3914,
+      "sha256": "7e4f10f82e521e59e76e173f200097fb73a9ae32a17c77ec2ee17030494e2600"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/callback_event.schema.json",
+      "size_bytes": 4010,
+      "sha256": "23ebd2d942e3df141e5e21a3020d575a301dfa1c679918447d92df4986bd2614"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/clean_approval.schema.json",
+      "size_bytes": 3271,
+      "sha256": "75fbecb30b375a3e1fa374d4d1f3346ba94d840e2167434581627c545ced01d0"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/clean_gate_index.schema.json",
+      "size_bytes": 1277,
+      "sha256": "5459f8c47779ba7115809bb491e31761087ab098103e3e3d6818eb9505c7dfc1"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/clean_manifest.schema.json",
+      "size_bytes": 3014,
+      "sha256": "268ed42fadfa00ff7446008986004dca2ae8901f4ec22635d734c4e8b3a03942"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/common.schema.json",
+      "size_bytes": 5771,
+      "sha256": "6e73dbc5f067b3a3ca80776ddc7857961138e6525712650dc3f0719f210d0dca"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/create_job_request.schema.json",
+      "size_bytes": 837,
+      "sha256": "881b5a65dd1845a555827cf37a5ef9112159566ed55d645a3e88c4199edd679e"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/create_job_response.schema.json",
+      "size_bytes": 2127,
+      "sha256": "a4723bb8c4bafffed3730814984e8ceb9fc66542eed548a383d8895a7e11ef83"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/cue_ledger.schema.json",
+      "size_bytes": 7884,
+      "sha256": "91b106d2b7d61e1350250f3589a561438ecb36a772d5f8c2bb68c3be1625fabb"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/dub_manifest.schema.json",
+      "size_bytes": 4632,
+      "sha256": "8e91f99573bfae8d6ab3b7de82d854a0931092c16a2b163e9cccf839b132f171"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/dub_work_item.schema.json",
+      "size_bytes": 1622,
+      "sha256": "14482d7df6e6da4d86e7112736107fe1d95b3fe7051ac381df336e1548fff301"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/error.schema.json",
+      "size_bytes": 221,
+      "sha256": "9bae86b6acb02f7bb8b8ac1aa021624a92e0fdf160bdda81e0d1f19d7e2532ed"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/idempotency_record.schema.json",
+      "size_bytes": 2929,
+      "sha256": "d3673202d92c5234315d29347b7bc522a987fece6aacef3179aacabd1a1127f4"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/job_state_record.schema.json",
+      "size_bytes": 2098,
+      "sha256": "bd567cbfab5a2a758254ed8bd00369636fe8184bb4fe36e1626e7fdcbc0ce5d6"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/job_status.schema.json",
+      "size_bytes": 3667,
+      "sha256": "1b798c25fe40f93729dc2b34963df5220475c1f727f6bb5b3cd511f5888228cf"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/machine_report.schema.json",
+      "size_bytes": 2290,
+      "sha256": "6ef93a7d2a2bbc9409183550ae33ae44fbf418cc459f8a2e0e9c7125481b043e"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/qa_packet.schema.json",
+      "size_bytes": 3519,
+      "sha256": "6f49e31f382fd68ffb099a7b0efce67af88126fec4e7f3547cf974e70c3830a5"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/release_approval.schema.json",
+      "size_bytes": 6325,
+      "sha256": "3151cae2a994ff5d3da114ac5ad4381a01728ca6819e526dda56521ce48a1dd0"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/release_index.schema.json",
+      "size_bytes": 1462,
+      "sha256": "7f53060872d5cb57bf586dc49ac26b1ecf575d5d2eb563257a18bf8ed94d67e5"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/source_cue_manifest.schema.json",
+      "size_bytes": 1771,
+      "sha256": "5e2e67925fccc2f0bcc86a49dfd96472ae5315c00774d002cb04e16fdae1b5f9"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/source_cue_record.schema.json",
+      "size_bytes": 6755,
+      "sha256": "90f0be19030cb15a9a0e7a17bc8b18763872ecf6856462effb606752e85596cf"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/taxonomy.schema.json",
+      "size_bytes": 4257,
+      "sha256": "5b52e54aee609a255432333aaff125306a20ca56399325698a3b80916b1d2ec8"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/translation_attempt.schema.json",
+      "size_bytes": 2149,
+      "sha256": "c38effeb59ba634a3f534d79e9f627d3bb327dc81f6a427b6af777b15af41b25"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/translation_preflight_approval.schema.json",
+      "size_bytes": 4008,
+      "sha256": "0293842cf4edf219875566ee104fd54750b53143602638574753f0b2228bd6c5"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/tts_attempt.schema.json",
+      "size_bytes": 10120,
+      "sha256": "95705c7a2584e0c0e008df6e9535280e41b46a75f97c2088cc49d674792b6f6f"
+    },
+    {
+      "path": "integrated_desub_contracts/schemas/v1/verifier_verdict.schema.json",
+      "size_bytes": 3479,
+      "sha256": "120be07e37c0a6a3efa8a00eb2424fd212e18d701e0a4197253d23c84908e3c7"
+    },
+    {
+      "path": "integrated_desub_contracts/transitions.py",
+      "size_bytes": 4404,
+      "sha256": "f04cec2f60956644d42106b5af99e1bbbefb6260258abce025cf75e8747d9260"
+    },
+    {
+      "path": "integrated_desub_contracts/validation.py",
+      "size_bytes": 91386,
+      "sha256": "50abcf8693bd9f8406b4dd50670079059876d4bb48a5ae5283be8953f4dfe164"
+    },
+    {
+      "path": "tests/test_integrated_desub_candidate_schemas.py",
+      "size_bytes": 8127,
+      "sha256": "eaeb94fc5dc51127571724dfb75aa64cf41b35259f6db2ba270e61ebb2ea16f2"
+    },
+    {
+      "path": "tests/test_integrated_desub_candidate_validation.py",
+      "size_bytes": 29930,
+      "sha256": "a3985eccb25182dbc2f7b253020f8f90556760ca23e96f901dad098b3f359f13"
+    },
+    {
+      "path": "tests/test_integrated_desub_contracts.py",
+      "size_bytes": 72573,
+      "sha256": "856238773d4b7d1e8aa6cf530f1aa1150663b94f308babc296f54c18054867d9"
+    },
+    {
+      "path": "tests/test_integrated_desub_evidence_validation.py",
+      "size_bytes": 36485,
+      "sha256": "359fd994f786866d518924415e6d228016df887048ad803a03e9f8916c06640a"
+    },
+    {
+      "path": "tests/test_integrated_desub_phase_a_files.py",
+      "size_bytes": 20807,
+      "sha256": "ffc944cc66832c076d5eb9accf74902f7c5213c5730571cd7f93b72f532d9800"
+    },
+    {
+      "path": "tests/test_integrated_desub_style_geometry.py",
+      "size_bytes": 8389,
+      "sha256": "86ce4848a116c59d97f041536f2214e1d2a3fd81e7d22d278d867b56fb1a4144"
+    }
+  ]
+}

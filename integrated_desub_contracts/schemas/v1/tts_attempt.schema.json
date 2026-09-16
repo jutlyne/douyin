@@ -1,0 +1,259 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.desub.local/v1/tts_attempt.schema.json",
+  "title": "Create-only CapCut TTS candidate attempt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "attempt", "cue_id", "cue_index", "candidate_index",
+    "translation_candidate", "translation_candidate_object_sha256",
+    "translation_candidate_sha256", "translation_preflight_approval",
+    "translation_preflight_approval_sha256", "provider", "voice",
+    "prosody_rate", "normalized_request_sha256", "provider_response_id",
+    "outcome", "created_at"
+  ],
+  "properties": {
+    "schema_version": {"const": "1"},
+    "attempt": {"$ref": "common.schema.json#/$defs/attemptBinding"},
+    "cue_id": {"$ref": "common.schema.json#/$defs/cueId"},
+    "cue_index": {"type": "integer", "minimum": 0},
+    "candidate_index": {"type": "integer", "minimum": 0, "maximum": 2},
+    "translation_candidate": {
+      "allOf": [
+        {"$ref": "common.schema.json#/$defs/objectRef"},
+        {"properties": {"content_type": {"const": "application/json"}}}
+      ]
+    },
+    "translation_candidate_object_sha256": {
+      "$ref": "common.schema.json#/$defs/sha256"
+    },
+    "translation_candidate_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "translation_preflight_approval": {
+      "allOf": [
+        {"$ref": "common.schema.json#/$defs/objectRef"},
+        {"properties": {"content_type": {"const": "application/json"}}}
+      ]
+    },
+    "translation_preflight_approval_sha256": {
+      "$ref": "common.schema.json#/$defs/sha256"
+    },
+    "provider": {"const": "capcut-private"},
+    "voice": {"const": "BV075_streaming"},
+    "prosody_rate": {"const": "1.5000"},
+    "normalized_request_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "provider_response_id": {"type": ["string", "null"], "minLength": 1, "maxLength": 256},
+    "outcome": {
+      "enum": ["succeeded", "provider_failed", "media_invalid", "no_active_speech", "schedule_unfit"]
+    },
+    "error_code": {
+      "enum": ["TTS_PROVIDER_FAILED", "TTS_MEDIA_INVALID", "TTS_VOICE_RATE_MISMATCH", "DUB_SCHEDULE_INVALID", "DUB_CUE_UNFIT"]
+    },
+    "returned_media": {
+      "allOf": [
+        {"$ref": "common.schema.json#/$defs/objectRef"},
+        {"properties": {"content_type": {"const": "audio/mpeg"}}}
+      ]
+    },
+    "decoded_pcm": {"$ref": "common.schema.json#/$defs/objectRef"},
+    "silence_detector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sample_rate_hz", "decoded_sample_count", "window_samples", "hop_samples",
+        "tail_window_padding", "rms_denominator_samples", "active_threshold_dbfs",
+        "active_threshold_linear", "consecutive_windows", "active_runs", "onset_sample",
+        "offset_sample_inclusive", "implementation_sha256"
+      ],
+      "properties": {
+        "sample_rate_hz": {"const": 44100},
+        "decoded_sample_count": {"type": "integer", "minimum": 1},
+        "window_samples": {"const": 882},
+        "hop_samples": {"const": 441},
+        "tail_window_padding": {"const": "right_zero_pad"},
+        "rms_denominator_samples": {"const": 882},
+        "active_threshold_dbfs": {"const": -45},
+        "active_threshold_linear": {"const": 0.005623413251903491},
+        "consecutive_windows": {"const": 2},
+        "active_runs": {
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["onset_sample", "offset_sample_inclusive"],
+            "properties": {
+              "onset_sample": {"type": "integer", "minimum": 0},
+              "offset_sample_inclusive": {"type": "integer", "minimum": 0}
+            }
+          }
+        },
+        "onset_sample": {"type": ["integer", "null"], "minimum": 0},
+        "offset_sample_inclusive": {"type": ["integer", "null"], "minimum": 0},
+        "implementation_sha256": {"$ref": "common.schema.json#/$defs/sha256"}
+      }
+    },
+    "schedule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "speech_anchor_sample", "previous_actual_offset_sample_inclusive",
+        "target_actual_onset_sample", "video_sample_count", "placement_sample", "actual_onset_sample",
+        "actual_offset_sample_inclusive", "lag_samples", "previous_gap_samples",
+        "overlap_samples", "fits"
+      ],
+      "properties": {
+        "speech_anchor_sample": {"type": "integer", "minimum": 0},
+        "previous_actual_offset_sample_inclusive": {"type": ["integer", "null"], "minimum": 0},
+        "target_actual_onset_sample": {"type": "integer", "minimum": 0},
+        "video_sample_count": {"type": "integer", "minimum": 1},
+        "placement_sample": {"type": "integer", "minimum": 0},
+        "actual_onset_sample": {"type": "integer", "minimum": 0},
+        "actual_offset_sample_inclusive": {"type": "integer", "minimum": 0},
+        "lag_samples": {"type": "integer"},
+        "previous_gap_samples": {"type": ["integer", "null"]},
+        "overlap_samples": {"type": "integer", "minimum": 0},
+        "fits": {"type": "boolean"}
+      }
+    },
+    "created_at": {"$ref": "common.schema.json#/$defs/rfc3339"}
+  },
+  "oneOf": [
+    {
+      "title": "Successful selectable attempt",
+      "properties": {
+        "outcome": {"const": "succeeded"},
+        "provider_response_id": {"type": "string", "minLength": 1, "maxLength": 256},
+        "silence_detector": {"$ref": "#/$defs/activeSilenceDetector"},
+        "schedule": {
+          "allOf": [
+            {"$ref": "#/properties/schedule"},
+            {"properties": {"fits": {"const": true}}}
+          ]
+        }
+      },
+      "required": ["returned_media", "decoded_pcm", "silence_detector", "schedule"],
+      "not": {"required": ["error_code"]}
+    },
+    {
+      "title": "Provider failed before any media artifact existed",
+      "properties": {
+        "outcome": {"const": "provider_failed"},
+        "error_code": {"const": "TTS_PROVIDER_FAILED"}
+      },
+      "required": ["error_code"],
+      "allOf": [{"$ref": "#/$defs/noMediaEvidence"}]
+    },
+    {
+      "title": "Returned media failed decode or voice/rate validation",
+      "properties": {
+        "outcome": {"const": "media_invalid"},
+        "provider_response_id": {"type": "string", "minLength": 1, "maxLength": 256}
+      },
+      "required": ["error_code", "returned_media"],
+      "oneOf": [
+        {
+          "title": "Undecodable or structurally invalid returned media",
+          "properties": {"error_code": {"const": "TTS_MEDIA_INVALID"}},
+          "allOf": [{"$ref": "#/$defs/noDecodedEvidence"}]
+        },
+        {
+          "title": "Decodable media with the wrong frozen voice or rate",
+          "properties": {
+            "error_code": {"const": "TTS_VOICE_RATE_MISMATCH"},
+            "silence_detector": {"$ref": "#/$defs/activeSilenceDetector"}
+          },
+          "required": ["decoded_pcm", "silence_detector"],
+          "not": {"required": ["schedule"]}
+        }
+      ]
+    },
+    {
+      "title": "Decoded media contains no active speech",
+      "properties": {
+        "outcome": {"const": "no_active_speech"},
+        "error_code": {"const": "TTS_MEDIA_INVALID"},
+        "provider_response_id": {"type": "string", "minLength": 1, "maxLength": 256},
+        "silence_detector": {"$ref": "#/$defs/inactiveSilenceDetector"}
+      },
+      "required": ["error_code", "returned_media", "decoded_pcm", "silence_detector"],
+      "not": {"required": ["schedule"]}
+    },
+    {
+      "title": "Decoded active speech cannot fit the frozen schedule",
+      "properties": {
+        "outcome": {"const": "schedule_unfit"},
+        "provider_response_id": {"type": "string", "minLength": 1, "maxLength": 256},
+        "silence_detector": {"$ref": "#/$defs/activeSilenceDetector"},
+        "schedule": {
+          "allOf": [
+            {"$ref": "#/properties/schedule"},
+            {"properties": {"fits": {"const": false}}}
+          ]
+        }
+      },
+      "required": [
+        "error_code", "returned_media", "decoded_pcm", "silence_detector", "schedule"
+      ],
+      "oneOf": [
+        {
+          "properties": {
+            "candidate_index": {"enum": [0, 1]},
+            "error_code": {"const": "DUB_SCHEDULE_INVALID"}
+          }
+        },
+        {
+          "properties": {
+            "candidate_index": {"const": 2},
+            "error_code": {"const": "DUB_CUE_UNFIT"}
+          }
+        }
+      ]
+    }
+  ],
+  "$defs": {
+    "activeSilenceDetector": {
+      "allOf": [
+        {"$ref": "#/properties/silence_detector"},
+        {
+          "properties": {
+            "active_runs": {"minItems": 1},
+            "onset_sample": {"type": "integer", "minimum": 0},
+            "offset_sample_inclusive": {"type": "integer", "minimum": 0}
+          }
+        }
+      ]
+    },
+    "inactiveSilenceDetector": {
+      "allOf": [
+        {"$ref": "#/properties/silence_detector"},
+        {
+          "properties": {
+            "active_runs": {"maxItems": 0},
+            "onset_sample": {"type": "null"},
+            "offset_sample_inclusive": {"type": "null"}
+          }
+        }
+      ]
+    },
+    "noMediaEvidence": {
+      "not": {
+        "anyOf": [
+          {"required": ["returned_media"]},
+          {"required": ["decoded_pcm"]},
+          {"required": ["silence_detector"]},
+          {"required": ["schedule"]}
+        ]
+      }
+    },
+    "noDecodedEvidence": {
+      "not": {
+        "anyOf": [
+          {"required": ["decoded_pcm"]},
+          {"required": ["silence_detector"]},
+          {"required": ["schedule"]}
+        ]
+      }
+    }
+  },
+  "$comment": "Before synthesis, a semantic validator must verify both ObjectRef SHA equality bindings, load a live signed pass translation_preflight_approval for this exact attempt/cue/candidate/policy family, and enforce approval.issued_at <= created_at < approval.expires_at. JSON Schema freezes the non-contradictory per-outcome evidence matrix; timing equations and cross-document equality remain semantic checks."
+}

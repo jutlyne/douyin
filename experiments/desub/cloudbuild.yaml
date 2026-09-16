@@ -1,0 +1,17 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - experiments/desub/Dockerfile
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/desub-lab:phase1
+      - .
+
+images:
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/desub-lab:phase1
+
+options:
+  machineType: E2_HIGHCPU_32
+  diskSizeGb: 200
+timeout: 7200s

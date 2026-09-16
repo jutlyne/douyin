@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.desub.local/v1/create_job_response.schema.json",
+  "title": "Create integrated DESUB job response",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "job_id", "attempt_id", "attempt_seq", "state",
+    "launch_state", "cached", "callback_expected", "status_url"
+  ],
+  "properties": {
+    "schema_version": {"const": "1"},
+    "job_id": {"$ref": "common.schema.json#/$defs/jobId"},
+    "attempt_id": {"$ref": "common.schema.json#/$defs/attemptId"},
+    "attempt_seq": {"type": "integer", "minimum": 1},
+    "state": {"$ref": "job_status.schema.json#/properties/state"},
+    "launch_state": {"$ref": "job_status.schema.json#/properties/launch_state"},
+    "cached": {"type": "boolean"},
+    "callback_expected": {"type": "boolean"},
+    "status_url": {"type": "string", "format": "uri", "maxLength": 2048},
+    "retry_after_seconds": {"type": "integer", "minimum": 1, "maximum": 900},
+    "clean_approval_id": {"$ref": "common.schema.json#/$defs/cleanApprovalId"},
+    "release_approval_id": {"$ref": "common.schema.json#/$defs/releaseApprovalId"},
+    "clean_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "source_cue_manifest_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "cue_ledger_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "artifact": {"$ref": "job_status.schema.json#/properties/artifact"}
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "cached": {"const": false},
+        "callback_expected": {"const": true},
+        "state": {"not": {"const": "completed"}}
+      },
+      "required": ["retry_after_seconds"],
+      "not": {"required": ["artifact"]}
+    },
+    {
+      "properties": {
+        "cached": {"const": true},
+        "callback_expected": {"const": false},
+        "state": {"const": "completed"},
+        "launch_state": {"const": "launched"}
+      },
+      "required": [
+        "clean_approval_id", "release_approval_id", "clean_sha256",
+        "source_cue_manifest_sha256", "cue_ledger_sha256", "artifact"
+      ]
+    }
+  ]
+}

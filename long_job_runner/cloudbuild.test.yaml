@@ -1,0 +1,16 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - long_job_runner/Dockerfile
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/long-runner:test
+      - .
+
+images:
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/long-runner:test
+
+options:
+  machineType: E2_HIGHCPU_8
+timeout: 1200s

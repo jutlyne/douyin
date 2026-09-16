@@ -1,0 +1,12 @@
+steps:
+- name: gcr.io/cloud-builders/docker
+  args:
+  - build
+  - -f
+  - container_long/Dockerfile.review
+  - -t
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/long-review:prod
+  - .
+images:
+- us-docker.pkg.dev/$PROJECT_ID/douyin/long-review:prod
+timeout: 1200s

@@ -1,0 +1,13 @@
+steps:
+- name: gcr.io/cloud-builders/docker
+  args:
+  - build
+  - --pull
+  - -f
+  - long_job_runner/Dockerfile
+  - -t
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/long-runner:prod
+  - .
+images:
+- us-docker.pkg.dev/$PROJECT_ID/douyin/long-runner:prod
+timeout: 1200s

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.desub.local/v1/source_cue_manifest.schema.json",
+  "title": "Ordered immutable source cue collection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "attempt", "source", "cue_count", "cues",
+    "collection_root_algorithm", "collection_root_contract_sha256", "collection_root",
+    "extractor_policy_sha256", "aligner_policy_sha256", "created_at"
+  ],
+  "properties": {
+    "schema_version": {"const": "1"},
+    "attempt": {"$ref": "common.schema.json#/$defs/attemptBinding"},
+    "source": {"$ref": "common.schema.json#/$defs/objectRef"},
+    "cue_count": {"type": "integer", "minimum": 1},
+    "cues": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["cue_id", "cue_index", "record", "crop", "pcm_slice"],
+        "properties": {
+          "cue_id": {"$ref": "common.schema.json#/$defs/cueId"},
+          "cue_index": {"type": "integer", "minimum": 0},
+          "record": {"$ref": "common.schema.json#/$defs/objectRef"},
+          "crop": {"$ref": "common.schema.json#/$defs/objectRef"},
+          "pcm_slice": {"$ref": "common.schema.json#/$defs/objectRef"}
+        }
+      }
+    },
+    "collection_root_algorithm": {"const": "RFC8785-JCS-SHA256-ORDERED"},
+    "collection_root_contract_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "collection_root": {"$ref": "common.schema.json#/$defs/sha256"},
+    "extractor_policy_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "aligner_policy_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "created_at": {"$ref": "common.schema.json#/$defs/rfc3339"}
+  }
+}

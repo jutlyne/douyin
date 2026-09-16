@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.desub.local/v1/dub_work_item.schema.json",
+  "title": "Controller-issued least-privilege dub work item",
+  "description": "The closed field set carries exact clean/evidence ObjectRefs only. A semantic validator must bind them to a live signed clean approval and reject raw-source/latest/prefix substitutions; least-privilege IAM must independently deny raw-source reads, prefix listing and alias lookup.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "attempt", "clean_approval_id", "clean_approval",
+    "clean_gate_index", "clean", "clean_manifest", "source_cue_manifest",
+    "source_cue_evidence", "clean_policy_sha256", "expires_at"
+  ],
+  "properties": {
+    "schema_version": {"const": "1"},
+    "attempt": {"$ref": "common.schema.json#/$defs/attemptBinding"},
+    "clean_approval_id": {"$ref": "common.schema.json#/$defs/cleanApprovalId"},
+    "clean_approval": {"$ref": "common.schema.json#/$defs/objectRef"},
+    "clean_gate_index": {"$ref": "common.schema.json#/$defs/objectRef"},
+    "clean": {"$ref": "common.schema.json#/$defs/objectRef"},
+    "clean_manifest": {"$ref": "common.schema.json#/$defs/objectRef"},
+    "source_cue_manifest": {"$ref": "common.schema.json#/$defs/objectRef"},
+    "source_cue_evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "common.schema.json#/$defs/objectRef"}
+    },
+    "clean_policy_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "expires_at": {"$ref": "common.schema.json#/$defs/rfc3339"}
+  }
+}

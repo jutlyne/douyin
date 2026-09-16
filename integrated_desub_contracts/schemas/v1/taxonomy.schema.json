@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.desub.local/v1/taxonomy.schema.json",
+  "title": "Integrated DESUB v1 closed taxonomies",
+  "$defs": {
+    "state": {
+      "enum": [
+        "queued", "downloading", "detecting", "inpainting", "encoding_clean",
+        "verifying_clean_machine", "verifying_clean_agents", "repairing_clean",
+        "clean_approved",
+        "aligning_speech", "translating", "verifying_translation",
+        "compacting_translation", "synthesizing_tts", "scheduling_tts",
+        "rendering_vietsub", "mixing_audio", "verifying_dub_machine",
+        "verifying_dub_agents", "signing_release", "completed",
+        "clean_qa_failed", "translation_failed", "tts_failed",
+        "scheduling_failed", "subtitle_failed", "dub_qa_failed", "failed", "cancelled"
+      ]
+    },
+    "terminalState": {
+      "enum": [
+        "completed", "clean_qa_failed", "translation_failed", "tts_failed",
+        "scheduling_failed", "subtitle_failed", "dub_qa_failed", "failed", "cancelled"
+      ]
+    },
+    "failureState": {
+      "enum": [
+        "clean_qa_failed", "translation_failed", "tts_failed", "scheduling_failed",
+        "subtitle_failed", "dub_qa_failed", "failed", "cancelled"
+      ]
+    },
+    "launchState": {"enum": ["reserving", "launching", "unknown", "launched"]},
+    "errorStage": {
+      "enum": [
+        "intake", "admission", "launch", "download", "input_preflight",
+        "source_cue_extraction", "clean_detection", "clean_inpaint", "clean_encode",
+        "clean_machine_qa", "clean_agent_qa", "clean_signing", "speech_alignment",
+        "translation", "translation_preflight", "tts", "scheduling", "vietsub",
+        "audio_mix", "dub_machine_qa", "dub_agent_qa", "release_signing",
+        "callback", "download_delivery", "cancellation"
+      ]
+    },
+    "errorCode": {
+      "enum": [
+        "INVALID_JSON", "SCHEMA_VALIDATION_FAILED", "INVALID_DOUYIN_URL",
+        "UNAUTHORIZED", "IDEMPOTENCY_CONFLICT", "ATTEMPT_IN_PROGRESS",
+        "CAPACITY_BUSY", "JOB_NOT_FOUND", "ATTEMPT_NOT_FOUND",
+        "SOURCE_DOWNLOAD_TIMEOUT", "SOURCE_DOWNLOAD_FAILED", "SOURCE_REDIRECT_BLOCKED",
+        "SOURCE_TOO_LARGE", "SOURCE_MIME_UNSUPPORTED", "SOURCE_CONTAINER_UNSUPPORTED",
+        "SOURCE_DURATION_UNSUPPORTED", "SOURCE_RESOLUTION_UNSUPPORTED",
+        "SOURCE_FPS_UNSUPPORTED", "SOURCE_VFR_UNSUPPORTED", "SOURCE_HDR_UNSUPPORTED",
+        "SOURCE_ROTATION_UNSUPPORTED", "SOURCE_AUDIO_CODEC_UNSUPPORTED",
+        "SOURCE_MULTI_AUDIO_UNSUPPORTED", "DUB_SOURCE_AUDIO_REQUIRED",
+        "UNSUPPORTED_SUBTITLE_LAYOUT", "LAUNCH_PRECONDITION_FAILED",
+        "LAUNCH_STATE_UNRESOLVED", "EXECUTION_TIMEOUT", "STALE_FENCE",
+        "INVALID_STATE_TRANSITION", "SOURCE_CUE_EXTRACTION_FAILED",
+        "SOURCE_CUE_MANIFEST_INVALID", "SOURCE_CUE_MISMATCH",
+        "CLEAN_DETECTION_FAILED", "CLEAN_INPAINT_FAILED", "CLEAN_ENCODE_FAILED",
+        "CLEAN_MEDIA_PARITY_FAILED", "CLEAN_AUDIO_PARITY_FAILED",
+        "CLEAN_RESIDUAL_TEXT", "CLEAN_MASK_PRECISION_FAILED",
+        "CLEAN_OUTSIDE_MASK_DAMAGE", "CLEAN_TEMPORAL_FLICKER", "CLEAN_QA_FAILED",
+        "CLEAN_APPROVAL_INVALID", "SPEECH_ALIGNMENT_FAILED",
+        "TRANSLATION_PROVIDER_FAILED", "TRANSLATION_PREFLIGHT_FAILED", "DUB_CUE_UNFIT",
+        "TTS_PROVIDER_FAILED", "TTS_MEDIA_INVALID", "TTS_VOICE_RATE_MISMATCH",
+        "DUB_SCHEDULE_INVALID", "DUB_SUBTITLE_UNFIT", "DUB_VIDEO_INTEGRITY_FAILED",
+        "DUB_AUDIO_POLICY_FAILED", "DUB_AUDIO_TAIL_FAILED", "DUB_QA_FAILED",
+        "QA_RUNTIME_UNAVAILABLE", "QA_TIMEOUT", "QA_VERDICT_INVALID",
+        "QA_VERDICT_BINDING_MISMATCH", "APPROVAL_INVALID", "APPROVAL_EXPIRED",
+        "APPROVAL_REVERIFICATION_REQUIRED", "ATTEMPT_RESULT_EXPIRED",
+        "KMS_KEY_INVALID", "REQUEST_CANCELLED",
+        "CALLBACK_SIGNATURE_INVALID", "CALLBACK_REPLAY",
+        "CALLBACK_DELIVERY_EXHAUSTED", "DOWNLOAD_SIGNATURE_INVALID",
+        "DOWNLOAD_EXPIRED", "DOWNLOAD_RANGE_INVALID"
+      ]
+    },
+    "verifierRole": {
+      "enum": [
+        "clean_a", "clean_b", "clean_c", "clean_final_sol",
+        "translation_semantic_preflight", "translation_style_preflight",
+        "translation_semantics", "translation_style", "dub_audio_video", "dub_final_sol"
+      ]
+    }
+  }
+}

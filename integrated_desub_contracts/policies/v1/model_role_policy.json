@@ -1,0 +1,57 @@
+{
+  "policy_name": "desub_model_role_policy",
+  "version": "1.0.0",
+  "status": "blocked_pending_production_runtime_decision",
+  "planning_and_delivery_roles": {
+    "architect_and_gate_auditor": {"model": "gpt-5.6-sol", "reasoning_effort": "xhigh"},
+    "executor": {"model": "gpt-5.6-luna", "reasoning_effort": "high"},
+    "executor_fallback": {
+      "model": "gpt-5.6-terra",
+      "reasoning_effort": "high",
+      "escalate_to_xhigh_only_for_hard_blocker": true
+    },
+    "max_reasoning_use": "persistent_failure_or_final_release_decision_only"
+  },
+  "production_role_requirements": [
+    "clean_a",
+    "clean_b",
+    "clean_c",
+    "clean_final_sol",
+    "translation_generator",
+    "translation_semantic_preflight",
+    "translation_style_preflight",
+    "translation_semantics",
+    "translation_style",
+    "dub_audio_video",
+    "dub_final_sol"
+  ],
+  "required_input_modalities_by_role": {
+    "clean_a": ["json", "image"],
+    "clean_b": ["json", "image_sequence_or_video_excerpt"],
+    "clean_c": ["json", "image_sequence_or_video_excerpt"],
+    "clean_final_sol": ["json", "image"],
+    "translation_generator": ["json", "text", "image", "source_audio_or_pinned_transcript_evidence"],
+    "translation_semantic_preflight": ["json", "text", "image", "source_audio_or_pinned_transcript_evidence"],
+    "translation_style_preflight": ["json", "text"],
+    "translation_semantics": ["json", "text", "image", "source_audio_or_pinned_transcript_evidence"],
+    "translation_style": ["json", "text"],
+    "dub_audio_video": ["json", "audio", "video"],
+    "dub_final_sol": ["json", "image"]
+  },
+  "direct_modality_claim_rule": "A role may claim it listened to audio or watched video only when the selected production endpoint documents and passes a probe for that direct input modality. Derived ASR/PCM/frame evidence must be named as derived evidence and cannot be described as direct perception.",
+  "independence": {
+    "generator_must_not_verify_own_candidate": true,
+    "preflight_verifiers_independent_from_generator_and_each_other": true,
+    "final_verifiers_use_fresh_context": true,
+    "executor_must_not_accept_own_output": true,
+    "majority_or_degraded_pass_allowed": false
+  },
+  "runtime_decision": "docs/DESUB_QA_RUNTIME_DECISION.md",
+  "unresolved_gate_a_bindings": [
+    "provider_and_regional_endpoint_per_role",
+    "immutable_model_version_or_provider_provenance_per_role",
+    "target_project_callability_and_quota",
+    "singapore_processing_and_short_retention_proof",
+    "audio_video_capable_runtime_for_dub_audio_video_or_approved_contract_revision"
+  ]
+}

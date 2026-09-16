@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.desub.local/v1/common.schema.json",
+  "title": "Integrated DESUB v1 common definitions",
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "decimalGeneration": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*$"
+    },
+    "rfc3339": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "jobId": {
+      "type": "string",
+      "pattern": "^desub-[0-9a-f]{32}$"
+    },
+    "attemptId": {
+      "type": "string",
+      "pattern": "^att-[0-9a-f]{32}$"
+    },
+    "cueId": {
+      "type": "string",
+      "pattern": "^cue-[0-9]{6}$"
+    },
+    "cleanApprovalId": {
+      "type": "string",
+      "pattern": "^cap-[0-9a-f]{32}$"
+    },
+    "releaseApprovalId": {
+      "type": "string",
+      "pattern": "^rap-[0-9a-f]{32}$"
+    },
+    "eventId": {
+      "type": "string",
+      "pattern": "^evt-[0-9a-f]{32}$"
+    },
+    "requestId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9._:-]+$"
+    },
+    "objectRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["uri", "generation", "size_bytes", "sha256", "content_type"],
+      "properties": {
+        "uri": {
+          "type": "string",
+          "pattern": "^gs://[a-z0-9][a-z0-9._-]{1,221}/[^\\r\\n]+$"
+        },
+        "generation": {"$ref": "#/$defs/decimalGeneration"},
+        "size_bytes": {"type": "integer", "minimum": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "content_type": {
+          "enum": [
+            "application/json", "application/octet-stream", "video/mp4",
+            "image/png", "image/jpeg", "audio/wav", "audio/mpeg", "audio/mp4"
+          ]
+        }
+      }
+    },
+    "attemptBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["job_id", "attempt_id", "attempt_seq", "fence_digest"],
+      "properties": {
+        "job_id": {"$ref": "#/$defs/jobId"},
+        "attempt_id": {"$ref": "#/$defs/attemptId"},
+        "attempt_seq": {"type": "integer", "minimum": 1},
+        "fence_digest": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "policyRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "sha256"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1, "maxLength": 64},
+        "version": {"const": "1.0.0"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "modelIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider", "service_identity", "model_id", "model_version",
+        "endpoint_region", "adapter_sha256", "response_id"
+      ],
+      "properties": {
+        "provider": {"type": "string", "minLength": 1, "maxLength": 64},
+        "service_identity": {"type": "string", "minLength": 1, "maxLength": 256},
+        "model_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "model_version": {"type": "string", "minLength": 1, "maxLength": 128},
+        "model_digest": {
+          "type": ["string", "null"],
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "endpoint_region": {"type": "string", "minLength": 1, "maxLength": 64},
+        "adapter_sha256": {"$ref": "#/$defs/sha256"},
+        "response_id": {"type": "string", "minLength": 1, "maxLength": 256}
+      }
+    },
+    "artifactBindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_sha256",
+        "clean_sha256",
+        "source_cue_manifest_sha256",
+        "source_cue_collection_root",
+        "clean_policy_sha256"
+      ],
+      "properties": {
+        "source_sha256": {"$ref": "#/$defs/sha256"},
+        "clean_sha256": {"$ref": "#/$defs/sha256"},
+        "source_cue_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "source_cue_collection_root": {"$ref": "#/$defs/sha256"},
+        "clean_policy_sha256": {"$ref": "#/$defs/sha256"},
+        "cue_ledger_sha256": {"$ref": "#/$defs/sha256"},
+        "dubbed_sha256": {"$ref": "#/$defs/sha256"},
+        "dub_policy_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "releaseBindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_sha256", "clean_sha256", "source_cue_manifest_sha256",
+        "source_cue_collection_root", "clean_policy_sha256", "cue_ledger_sha256",
+        "dubbed_sha256", "dub_policy_sha256"
+      ],
+      "properties": {
+        "source_sha256": {"$ref": "#/$defs/sha256"},
+        "clean_sha256": {"$ref": "#/$defs/sha256"},
+        "source_cue_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "source_cue_collection_root": {"$ref": "#/$defs/sha256"},
+        "clean_policy_sha256": {"$ref": "#/$defs/sha256"},
+        "cue_ledger_sha256": {"$ref": "#/$defs/sha256"},
+        "dubbed_sha256": {"$ref": "#/$defs/sha256"},
+        "dub_policy_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "kmsSignature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "kms_key_version",
+        "public_key_sha256",
+        "signed_digest",
+        "signature_b64"
+      ],
+      "properties": {
+        "algorithm": {"const": "EC_SIGN_P256_SHA256"},
+        "kms_key_version": {
+          "type": "string",
+          "pattern": "^projects/[^/]+/locations/[^/]+/keyRings/[^/]+/cryptoKeys/[^/]+/cryptoKeyVersions/[1-9][0-9]*$"
+        },
+        "public_key_sha256": {"$ref": "#/$defs/sha256"},
+        "signed_digest": {"$ref": "#/$defs/sha256"},
+        "signature_b64": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/]+={0,2}$"
+        }
+      }
+    }
+  }
+}

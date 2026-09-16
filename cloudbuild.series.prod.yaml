@@ -1,0 +1,68 @@
+steps:
+  - id: long-worker
+    name: gcr.io/cloud-builders/docker
+    waitFor: ['-']
+    args:
+      - build
+      - --pull
+      - -f
+      - container_long/Dockerfile
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/long-worker:prod
+      - .
+  - id: long-assembler
+    name: gcr.io/cloud-builders/docker
+    waitFor: ['-']
+    args:
+      - build
+      - --pull
+      - -f
+      - container_long/Dockerfile.assembler
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/long-assembler:prod
+      - .
+  - id: long-coordinator
+    name: gcr.io/cloud-builders/docker
+    waitFor: ['-']
+    args:
+      - build
+      - --pull
+      - -f
+      - container_long/Dockerfile.coordinator
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/long-coordinator:prod
+      - .
+  - id: long-runner
+    name: gcr.io/cloud-builders/docker
+    waitFor: ['-']
+    args:
+      - build
+      - --pull
+      - -f
+      - long_job_runner/Dockerfile
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/long-runner:prod
+      - .
+  - id: douyin-flow
+    name: gcr.io/cloud-builders/docker
+    waitFor: ['-']
+    args:
+      - build
+      - --pull
+      - -f
+      - n8n_cloudrun/Dockerfile.flow
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/douyin-flow:1.0.0
+      - .
+
+images:
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/long-worker:prod
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/long-assembler:prod
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/long-coordinator:prod
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/long-runner:prod
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/douyin-flow:1.0.0
+
+options:
+  machineType: E2_HIGHCPU_8
+  diskSizeGb: 100
+timeout: 3600s

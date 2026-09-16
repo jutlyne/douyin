@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.desub.local/v1/dub_manifest.schema.json",
+  "title": "Create-only integrated dub manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "attempt", "clean_approval_id", "clean_approval",
+    "source_cue_manifest", "clean", "cue_ledger", "dubbed", "no_vietsub_control",
+    "vietsub_alpha_mask", "mix_report", "stem_pcm", "clean_policy", "dub_policy",
+    "output_video", "output_audio", "subtitle_render",
+    "render_policy_sha256", "style_policy_sha256", "mix_policy_sha256", "created_at"
+  ],
+  "properties": {
+    "schema_version": {"const": "1"},
+    "attempt": {"$ref": "common.schema.json#/$defs/attemptBinding"},
+    "clean_approval_id": {"$ref": "common.schema.json#/$defs/cleanApprovalId"},
+    "clean_approval": {"$ref": "common.schema.json#/$defs/objectRef"},
+    "source_cue_manifest": {"$ref": "common.schema.json#/$defs/objectRef"},
+    "clean": {"$ref": "common.schema.json#/$defs/objectRef"},
+    "cue_ledger": {"$ref": "common.schema.json#/$defs/objectRef"},
+    "dubbed": {"$ref": "common.schema.json#/$defs/objectRef"},
+    "no_vietsub_control": {"$ref": "common.schema.json#/$defs/objectRef"},
+    "vietsub_alpha_mask": {"$ref": "common.schema.json#/$defs/objectRef"},
+    "mix_report": {"$ref": "common.schema.json#/$defs/objectRef"},
+    "stem_pcm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["clean_input", "bed", "ducked_bed", "voice", "premaster"],
+      "properties": {
+        "clean_input": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "bed": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "ducked_bed": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "voice": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "premaster": {"$ref": "common.schema.json#/$defs/objectRef"}
+      }
+    },
+    "output_video": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "codec_name", "width", "height", "pixel_format", "frame_rate",
+        "frame_count", "duration_samples_44100"
+      ],
+      "properties": {
+        "codec_name": {"const": "h264"},
+        "width": {"type": "integer", "minimum": 1, "maximum": 1920},
+        "height": {"type": "integer", "minimum": 1, "maximum": 1920},
+        "pixel_format": {"const": "yuv420p"},
+        "frame_rate": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*/[1-9][0-9]*$"
+        },
+        "frame_count": {"type": "integer", "minimum": 1},
+        "duration_samples_44100": {"type": "integer", "minimum": 1}
+      }
+    },
+    "output_audio": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "codec_name", "sample_rate_hz", "channels", "channel_layout",
+        "packet_count", "decoded_sample_count", "priming_samples",
+        "padding_samples", "effective_playable_end_sample_inclusive"
+      ],
+      "properties": {
+        "codec_name": {"const": "aac"},
+        "sample_rate_hz": {"const": 44100},
+        "channels": {"const": 2},
+        "channel_layout": {"const": "stereo"},
+        "packet_count": {"type": "integer", "minimum": 1},
+        "decoded_sample_count": {"type": "integer", "minimum": 1},
+        "priming_samples": {"type": "integer", "minimum": 0},
+        "padding_samples": {"type": "integer", "minimum": 0},
+        "effective_playable_end_sample_inclusive": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "subtitle_render": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode", "event_count", "maximum_lines", "font_file_sha256",
+        "renderer_binding_sha256", "style_policy_sha256"
+      ],
+      "properties": {
+        "mode": {"const": "burn_in"},
+        "event_count": {"type": "integer", "minimum": 1},
+        "maximum_lines": {"const": 2},
+        "font_file_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+        "renderer_binding_sha256": {
+          "$ref": "common.schema.json#/$defs/sha256"
+        },
+        "style_policy_sha256": {"$ref": "common.schema.json#/$defs/sha256"}
+      }
+    },
+    "clean_policy": {"$ref": "common.schema.json#/$defs/policyRef"},
+    "dub_policy": {"$ref": "common.schema.json#/$defs/policyRef"},
+    "render_policy_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "style_policy_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "mix_policy_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "created_at": {"$ref": "common.schema.json#/$defs/rfc3339"}
+  }
+}

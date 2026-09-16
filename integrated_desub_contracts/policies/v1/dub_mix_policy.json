@@ -1,0 +1,52 @@
+{
+  "policy_name": "dub_mix_policy",
+  "version": "1.0.0",
+  "status": "blocked_pending_ffmpeg_image_and_channel_matrix_binding",
+  "source_access": {
+    "sole_bed_input": "exact_aac_from_approved_clean_mp4",
+    "clean_audio_gate_must_prove_source_packet_and_pcm_identity": true,
+    "raw_source_read_in_dub_stage_allowed": false,
+    "source_separation_allowed": false,
+    "residual_chinese_voice_in_bed_is_accepted": true
+  },
+  "format": {
+    "sample_rate_hz": 44100,
+    "sample_format": "f32le_internal",
+    "output_channels": 2,
+    "output_layout": "stereo",
+    "channel_matrix_table_sha256": null
+  },
+  "ordered_graph": [
+    "decode approved clean AAC",
+    "resample and deterministically map to 44100 Hz stereo",
+    "apad then atrim to exact video sample duration",
+    "apply bed pre-duck gain -20.000 dB",
+    "assemble selected voice clips at 0.000 dB",
+    "sidechaincompress bed from voice bus",
+    "amix ducked bed and voice with normalize=0",
+    "two-pass BS.1770 loudnorm I=-16:LRA=11:TP=-1",
+    "true-peak limiter at -1 dBTP",
+    "apad and atrim to exact video sample duration",
+    "encode exactly one AAC 44100 Hz stereo stream"
+  ],
+  "gains_db": {"bed_pre_duck": "-20.000", "voice": "0.000"},
+  "sidechaincompress": {
+    "threshold": "0.020000",
+    "ratio": "10.000",
+    "attack_ms": 8,
+    "release_ms": 250
+  },
+  "amix": {"normalize": 0},
+  "loudnorm_two_pass": {"integrated_lufs": -16, "lra": 11, "true_peak_dbtp": -1},
+  "limiter": {"true_peak_dbtp": -1},
+  "required_pcm_sha256": ["clean_input", "bed", "ducked_bed", "voice", "premaster"],
+  "ffmpeg_image_digest": null,
+  "filter_graph_sha256": null,
+  "unresolved_gate_a_bindings": [
+    "exact_channel_layout_matrix_table", "resampler_options", "internal_sample_format",
+    "all_implicit_sidechaincompress_options", "loudnorm_pass2_measured_field_rounding",
+    "loudnorm_linear_and_dual_mono_options", "true_peak_limiter_oversampling_and_options",
+    "aac_encoder_profile_and_bitrate", "video_sample_count_rounding",
+    "stem_canonical_byte_format", "ffmpeg_image_digest", "filter_graph_sha256"
+  ]
+}

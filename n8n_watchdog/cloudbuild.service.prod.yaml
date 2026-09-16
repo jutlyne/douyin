@@ -1,0 +1,12 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - n8n_watchdog/Dockerfile.service
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/n8n-recovery:prod
+      - n8n_watchdog
+
+images:
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/n8n-recovery:prod

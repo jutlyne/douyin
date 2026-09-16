@@ -1,0 +1,42 @@
+# ============================================================================
+# cloudbuild.job.yaml — build image Cloud Run Job `short-maker`
+# ============================================================================
+# BUILD (context = thư mục douyin_shorts/ — chứa douyin_api/ + container_short/):
+#   gcloud builds submit douyin_shorts \
+#     --config=douyin_shorts/container_short/cloudbuild.job.yaml
+#   (Khi tách thành repo riêng, root repo = douyin_shorts → chạy:
+#     gcloud builds submit . --config=container_short/cloudbuild.job.yaml )
+#
+# DEPLOY/UPDATE Job (giữ env/secrets — dùng update, KHÔNG replace):
+#   gcloud run jobs create short-maker \
+#     --image us-docker.pkg.dev/$PROJECT_ID/douyin/short:job \
+#     --region asia-southeast1 --memory 8Gi --cpu 4 --max-retries 1 \
+#     --task-timeout 3600 \
+#     --set-env-vars GCP_PROJECT_ID=YOUR_GCP_PROJECT,VERTEX_REGION=us-central1,\
+# SCRATCH_GS_PREFIX=gs://YOUR_GCP_PROJECT-shorts/tmp
+#   # các lần sau:
+#   gcloud run jobs update short-maker --region asia-southeast1 \
+#     --image us-docker.pkg.dev/$PROJECT_ID/douyin/short:job
+#
+# TRIGGER 1 execution (n8n làm tương tự qua REST jobs.run):
+#   gcloud run jobs execute short-maker --region asia-southeast1 \
+#     --update-env-vars DOUYIN_URL='https://v.douyin.com/xxx/',\
+# OUTPUT_URI=gs://YOUR_GCP_PROJECT-shorts/out/abc/final.mp4
+# ============================================================================
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-f'
+      - 'container_short/Dockerfile.job'
+      - '-t'
+      - 'us-docker.pkg.dev/$PROJECT_ID/douyin/short:job'
+      - '.'
+
+images:
+  - 'us-docker.pkg.dev/$PROJECT_ID/douyin/short:job'
+
+options:
+  machineType: 'E2_HIGHCPU_8'
+  diskSizeGb: 60
+timeout: '3600s'

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.desub.local/v1/translation_attempt.schema.json",
+  "title": "Create-only translation candidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "attempt", "cue_id", "cue_index", "source_cue_record",
+    "source_cue_record_sha256",
+    "candidate_index", "reason", "text_vi_raw", "text_vi_nfc", "generator",
+    "generator_prompt_sha256", "candidate_sha256", "created_at"
+  ],
+  "properties": {
+    "schema_version": {"const": "1"},
+    "attempt": {"$ref": "common.schema.json#/$defs/attemptBinding"},
+    "cue_id": {"$ref": "common.schema.json#/$defs/cueId"},
+    "cue_index": {"type": "integer", "minimum": 0},
+    "source_cue_record": {
+      "allOf": [
+        {"$ref": "common.schema.json#/$defs/objectRef"},
+        {"properties": {"content_type": {"const": "application/json"}}}
+      ]
+    },
+    "source_cue_record_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "candidate_index": {"type": "integer", "minimum": 0, "maximum": 2},
+    "reason": {"enum": ["initial", "compact_unfit"]},
+    "text_vi_raw": {"type": "string", "minLength": 1, "maxLength": 2048},
+    "text_vi_nfc": {"type": "string", "minLength": 1, "maxLength": 2048},
+    "generator": {"$ref": "common.schema.json#/$defs/modelIdentity"},
+    "generator_prompt_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "candidate_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "created_at": {"$ref": "common.schema.json#/$defs/rfc3339"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"candidate_index": {"const": 0}}, "required": ["candidate_index"]},
+      "then": {"properties": {"reason": {"const": "initial"}}},
+      "else": {"properties": {"reason": {"const": "compact_unfit"}}}
+    }
+  ],
+  "$comment": "This is a generator-owned create-only candidate. It MUST NOT contain verifier verdicts or a controller approval created later. A semantic validator must require source_cue_record.sha256 == source_cue_record_sha256 and must enforce family sequencing through translation_preflight_approval.schema.json."
+}

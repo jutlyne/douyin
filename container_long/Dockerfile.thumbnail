@@ -1,0 +1,23 @@
+FROM python:3.11-slim-bookworm
+
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y --no-install-recommends ca-certificates fonts-dejavu-core \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    VERTEX_REGION=global \
+    THUMBNAIL_MODEL=gemini-2.5-flash-image \
+    THUMBNAIL_HEADLINE="XUYÊN KHÔNG ĐẠI ĐƯỜNG"
+
+WORKDIR /app
+COPY container_long/requirements.thumbnail.txt /app/requirements.txt
+RUN pip uninstall -y setuptools wheel \
+    && pip install --upgrade pip \
+    && pip install --only-binary=:all: -r /app/requirements.txt \
+    && pip uninstall -y pip \
+    && rm -rf /usr/local/lib/python3.11/ensurepip
+COPY container_long /app/container_long
+
+ENTRYPOINT ["python", "-m", "container_long.thumbnail_generator_job"]

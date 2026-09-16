@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "description": "Spoken Vietnamese adaptations for natural BV075 pacing. Display subtitles remain unchanged.",
+  "overrides": {
+    "2": "Máy tầm 2.500.",
+    "3": "Có máy chơi game không?",
+    "5": "Có, thùng máy.",
+    "6": "Thùng máy? Ừ.",
+    "7": "Bạn hay chơi game gì?",
+    "8": "Valorant với Delta Force.",
+    "9": "Valorant, Delta.",
+    "10": "Delta.",
+    "11": "Tầm 2.500 tệ nhỉ.",
+    "19": "500G đủ dùng, 250.",
+    "21": "i3 không đủ dùng.",
+    "24": "C14, tám ghi.",
+    "37": "Nguồn sáu trăm oát.",
+    "42": "Vỏ màu trắng.",
+    "43": "Hay màu đen?",
+    "50": "Case bể cá 60.",
+    "54": "Xong.",
+    "64": "Tổng bao nhiêu?",
+    "66": "Cài driver xong.",
+    "68": "Có hộp không?",
+    "70": "Đây nhé."
+  }
+}

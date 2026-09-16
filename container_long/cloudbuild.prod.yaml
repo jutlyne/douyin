@@ -1,0 +1,71 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - container_long/Dockerfile
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/long-worker:prod
+      - .
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - container_long/Dockerfile.assembler
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/long-assembler:prod
+      - .
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - container_long/Dockerfile.coordinator
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/long-coordinator:prod
+      - .
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - long_job_runner/Dockerfile
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/long-runner:prod
+      - .
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - container_long/Dockerfile.youtube-uploader
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/long-youtube-uploader:prod
+      - .
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - container_long/Dockerfile.review
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/long-review:prod
+      - .
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - container_long/Dockerfile.thumbnail
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/long-thumbnail-generator:prod
+      - .
+
+images:
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/long-worker:prod
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/long-assembler:prod
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/long-coordinator:prod
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/long-runner:prod
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/long-youtube-uploader:prod
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/long-review:prod
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/long-thumbnail-generator:prod
+
+options:
+  machineType: E2_HIGHCPU_8
+  diskSizeGb: 100
+timeout: 3600s

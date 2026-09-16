@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.desub.local/v1/clean_manifest.schema.json",
+  "title": "Create-only clean artifact manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "attempt", "source", "clean", "source_cue_manifest",
+    "source_cue_collection_root", "mask", "engine_report", "source_media",
+    "clean_media", "engine", "clean_contract_sha256", "clean_policy",
+    "created_at"
+  ],
+  "properties": {
+    "schema_version": {"const": "1"},
+    "attempt": {"$ref": "common.schema.json#/$defs/attemptBinding"},
+    "source": {"$ref": "common.schema.json#/$defs/objectRef"},
+    "clean": {"$ref": "common.schema.json#/$defs/objectRef"},
+    "source_cue_manifest": {"$ref": "common.schema.json#/$defs/objectRef"},
+    "source_cue_collection_root": {"$ref": "common.schema.json#/$defs/sha256"},
+    "mask": {"$ref": "common.schema.json#/$defs/objectRef"},
+    "engine_report": {"$ref": "common.schema.json#/$defs/objectRef"},
+    "source_media": {"$ref": "#/$defs/media"},
+    "clean_media": {"$ref": "#/$defs/media"},
+    "engine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["image_digest", "code_sha256", "model_sha256", "parameters_sha256"],
+      "properties": {
+        "image_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "code_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+        "model_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+        "parameters_sha256": {"$ref": "common.schema.json#/$defs/sha256"}
+      }
+    },
+    "clean_contract_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "clean_policy": {"$ref": "common.schema.json#/$defs/policyRef"},
+    "created_at": {"$ref": "common.schema.json#/$defs/rfc3339"}
+  },
+  "$defs": {
+    "media": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "width", "height", "fps", "frame_count", "video_time_base",
+        "duration_ticks", "video_codec", "pixel_format", "audio_codec",
+        "audio_stream_count", "audio_sample_rate_hz", "audio_channels"
+      ],
+      "properties": {
+        "width": {"type": "integer", "minimum": 1, "maximum": 1920},
+        "height": {"type": "integer", "minimum": 1, "maximum": 1920},
+        "fps": {"type": "string", "pattern": "^[1-9][0-9]*/[1-9][0-9]*$"},
+        "frame_count": {"type": "integer", "minimum": 1},
+        "video_time_base": {"type": "string", "pattern": "^1/[1-9][0-9]*$"},
+        "duration_ticks": {"type": "integer", "minimum": 1},
+        "video_codec": {"type": "string", "minLength": 1, "maxLength": 32},
+        "pixel_format": {"type": "string", "minLength": 1, "maxLength": 32},
+        "audio_codec": {"const": "aac"},
+        "audio_stream_count": {"const": 1},
+        "audio_sample_rate_hz": {"type": "integer", "minimum": 8000, "maximum": 192000},
+        "audio_channels": {"type": "integer", "minimum": 1, "maximum": 8}
+      }
+    }
+  }
+}

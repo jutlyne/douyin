@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.desub.local/v1/callback_event.schema.json",
+  "title": "Integrated DESUB terminal callback body",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "event", "event_id", "job_id", "attempt_id", "attempt_seq",
+    "state", "state_version", "verification_passed", "occurred_at"
+  ],
+  "properties": {
+    "schema_version": {"const": "1"},
+    "event": {
+      "enum": [
+        "desub.completed", "desub.clean_qa_failed", "desub.translation_failed",
+        "desub.tts_failed", "desub.scheduling_failed", "desub.subtitle_failed",
+        "desub.dub_qa_failed", "desub.failed", "desub.cancelled"
+      ]
+    },
+    "event_id": {"$ref": "common.schema.json#/$defs/eventId"},
+    "job_id": {"$ref": "common.schema.json#/$defs/jobId"},
+    "attempt_id": {"$ref": "common.schema.json#/$defs/attemptId"},
+    "attempt_seq": {"type": "integer", "minimum": 1},
+    "state": {
+      "enum": [
+        "completed", "clean_qa_failed", "translation_failed", "tts_failed",
+        "scheduling_failed", "subtitle_failed", "dub_qa_failed", "failed", "cancelled"
+      ]
+    },
+    "state_version": {"type": "integer", "minimum": 1},
+    "verification_passed": {"type": "boolean"},
+    "clean_approval_id": {"$ref": "common.schema.json#/$defs/cleanApprovalId"},
+    "release_approval_id": {"$ref": "common.schema.json#/$defs/releaseApprovalId"},
+    "source_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "clean_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "source_cue_manifest_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "cue_ledger_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "dubbed_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "error": {"$ref": "job_status.schema.json#/properties/error"},
+    "occurred_at": {"$ref": "common.schema.json#/$defs/rfc3339"}
+  },
+  "oneOf": [
+    {
+      "allOf": [
+        {"$ref": "#/$defs/completedOutcome"},
+        {
+          "properties": {
+            "event": {"const": "desub.completed"},
+            "state": {"const": "completed"}
+          }
+        }
+      ]
+    },
+    {"allOf": [{"$ref": "#/$defs/failureOutcome"}, {"properties": {"event": {"const": "desub.clean_qa_failed"}, "state": {"const": "clean_qa_failed"}}}]},
+    {"allOf": [{"$ref": "#/$defs/failureOutcome"}, {"properties": {"event": {"const": "desub.translation_failed"}, "state": {"const": "translation_failed"}}}]},
+    {"allOf": [{"$ref": "#/$defs/failureOutcome"}, {"properties": {"event": {"const": "desub.tts_failed"}, "state": {"const": "tts_failed"}}}]},
+    {"allOf": [{"$ref": "#/$defs/failureOutcome"}, {"properties": {"event": {"const": "desub.scheduling_failed"}, "state": {"const": "scheduling_failed"}}}]},
+    {"allOf": [{"$ref": "#/$defs/failureOutcome"}, {"properties": {"event": {"const": "desub.subtitle_failed"}, "state": {"const": "subtitle_failed"}}}]},
+    {"allOf": [{"$ref": "#/$defs/failureOutcome"}, {"properties": {"event": {"const": "desub.dub_qa_failed"}, "state": {"const": "dub_qa_failed"}}}]},
+    {"allOf": [{"$ref": "#/$defs/failureOutcome"}, {"properties": {"event": {"const": "desub.failed"}, "state": {"const": "failed"}}}]},
+    {"allOf": [{"$ref": "#/$defs/failureOutcome"}, {"properties": {"event": {"const": "desub.cancelled"}, "state": {"const": "cancelled"}}}]}
+  ],
+  "$defs": {
+    "completedOutcome": {
+      "properties": {"verification_passed": {"const": true}},
+      "required": [
+        "clean_approval_id", "release_approval_id", "source_sha256", "clean_sha256",
+        "source_cue_manifest_sha256", "cue_ledger_sha256", "dubbed_sha256"
+      ],
+      "not": {"required": ["error"]}
+    },
+    "failureOutcome": {
+      "properties": {"verification_passed": {"const": false}},
+      "required": ["error"],
+      "not": {
+        "anyOf": [
+          {"required": ["release_approval_id"]},
+          {"required": ["dubbed_sha256"]}
+        ]
+      }
+    }
+  }
+}

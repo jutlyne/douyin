@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.desub.local/v1/error.schema.json",
+  "title": "Redacted stable DESUB error",
+  "$ref": "job_status.schema.json#/properties/error"
+}

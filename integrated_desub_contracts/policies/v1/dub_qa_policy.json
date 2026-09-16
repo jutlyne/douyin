@@ -1,0 +1,144 @@
+{
+  "policy_name": "dub_qa_policy",
+  "version": "1.0.0",
+  "status": "blocked_pending_implementation_bindings_and_fixture_calibration",
+  "decision_semantics": "all_machine_metrics_preflight_roles_final_roles_and_sol_must_pass",
+  "required_machine_metric_names": [
+    "cue_cardinality", "translation", "tts", "silence_detector", "schedule",
+    "vietsub_style_sync", "dubbed_video_integrity",
+    "mix_graph_stem_integrity", "audio_metrics", "asr_backcheck"
+  ],
+  "cue_cardinality": {
+    "required_equality": "N_source=N_selected_translation=N_selected_tts=N_vietsub",
+    "index_contiguous_from_zero": true,
+    "empty_merge_split_drop_duplicate_reorder_allowed": false
+  },
+  "translation": {
+    "max_compact_retries": 2,
+    "max_candidates_per_cue": 3,
+    "candidate_indices": [0, 1, 2],
+    "preserve": ["meaning", "names", "numbers", "units", "negation", "relationships", "humor_mechanism", "punchline"],
+    "natural_vietnamese_required": true,
+    "invention_allowed": false,
+    "preflight_roles": ["translation_semantic_preflight", "translation_style_preflight"],
+    "both_preflight_pass_before_tts": true,
+    "unfit_after_budget_error": "DUB_CUE_UNFIT"
+  },
+  "tts": {
+    "provider": "capcut-private",
+    "base_url": "https://editor-api-sg.capcutapi.com",
+    "create_path": "/lv/v1/common_task/new",
+    "query_path": "/lv/v1/common_task/query",
+    "voice": "BV075_streaming",
+    "resource_id": "7102355803792740865",
+    "xml_lang": "vi-VN",
+    "request_key": "sami_text_to_speech",
+    "task_version": "v3",
+    "audio_format": "mp3",
+    "ssml_prosody_rate": "1.5000",
+    "global_for_every_cue": true,
+    "post_atempo_allowed": false,
+    "per_cue_speed_allowed": false,
+    "provider_or_voice_fallback_allowed": false,
+    "accepted_risk_exception": "private_endpoint_has_no_official_stability_region_or_no_training_guarantee_text_payload_only",
+    "exception_does_not_apply_to_qa_agents": true,
+    "normalized_request_hash_required": true,
+    "provider_response_id_required": true,
+    "returned_media_and_decoded_pcm_hash_required": true
+  },
+  "silence_detector": {
+    "decode_sample_rate_hz": 44100,
+    "decode_sample_format": "f32le",
+    "channels": "stereo_max_channel_rms",
+    "window_ms": 20,
+    "window_samples": 882,
+    "hop_ms": 10,
+    "hop_samples": 441,
+    "active_threshold_dbfs_strictly_greater_than": -45,
+    "active_threshold_linear": 0.005623413251903491,
+    "consecutive_active_windows": 2,
+    "tail_window_padding": "right_zero_pad",
+    "rms_denominator_samples": 882,
+    "run_interval": "[first_window_start,min(decoded_sample_count-1,last_window_start+881)]",
+    "multiple_runs": "retain_all_for_audit_select_earliest_onset_and_latest_offset",
+    "no_retained_active_run_action": "fail_TTS_MEDIA_INVALID",
+    "onset_semantics": "first_active_sample_inclusive",
+    "offset_semantics": "last_active_sample_inclusive",
+    "implementation_sha256": null
+  },
+  "schedule": {
+    "source_evidence_sample_rate_hz": 44100,
+    "speech_anchor_definition": "exact_source_cue_record.source_audio.speech_start_sample_on_absolute_44100_timeline",
+    "actual_onset_formula": "placement_sample+detected_onset_sample",
+    "actual_offset_formula": "placement_sample+detected_offset_sample_inclusive",
+    "gap_formula": "next_actual_onset-previous_actual_offset_inclusive",
+    "overlap_formula": "max(0,previous_actual_offset_inclusive-next_actual_onset+1)",
+    "target_earliest_actual_onset": "max(speech_anchor,previous_actual_offset_inclusive+2205)",
+    "placement_formula": "max(0,target_actual_onset-detected_onset_sample)",
+    "minimum_gap_samples": 2205,
+    "minimum_lag_samples": 0,
+    "maximum_lag_samples": 26460,
+    "overlap_tolerance_samples": 0,
+    "video_sample_count_formula": "ceil(exact_cfr_video_duration_rational*44100)",
+    "final_active_offset_rule": "offset_inclusive<=video_sample_count-1"
+  },
+  "dubbed_video_integrity": {
+    "control": "same_settings_no_vietsub_from_exact_clean_frames",
+    "alpha_mask_required": true,
+    "codec_halo_px": 32,
+    "max_per_frame_luma_mae": 1.5,
+    "global_luma_abs_diff_p99": 8,
+    "absolute_diff_threshold": 16,
+    "max_per_frame_fraction_above_threshold": 0.001
+  },
+  "mix_graph_stem_integrity": {
+    "required_named_stems": [
+      "clean_input", "bed", "ducked_bed", "voice", "premaster"
+    ],
+    "exact_object_ref_and_decoded_pcm_sha_required": true,
+    "mix_graph_policy_sha256_required": true,
+    "no_unnamed_or_extra_stems": true
+  },
+  "vietsub_style_sync": {
+    "event_count_equals_selected_cue_count": true,
+    "text_and_inclusive_sample_interval_equal_cue_ledger": true,
+    "font_renderer_style_and_alpha_mask_bindings_required": true,
+    "maximum_lines": 2
+  },
+  "audio_metrics": {
+    "standard": "ITU-R_BS.1770-4_EBU_R128",
+    "implementation": "ffmpeg_ebur128_and_true_peak",
+    "ffmpeg_image_digest": null,
+    "true_peak_oversample_minimum": 4,
+    "integrated_lufs_target": -16,
+    "integrated_lufs_tolerance": 1,
+    "true_peak_max_dbtp": -1,
+    "limiter_ceiling_linear": 0.8912509381337456,
+    "clipped_sample_definition": "abs(decoded_float_sample)>=1.0",
+    "clipped_samples_max": 0,
+    "active_voice_window_ms": 100,
+    "voice_minus_ducked_bed_p05_min_db": 8,
+    "no_tts_bed_control_tolerance": null,
+    "channel_swap_phase_inversion_dropout_allowed": false,
+    "aac_frame_samples": 1024,
+    "output_sample_rate_hz": 44100,
+    "effective_playable_end_max_shortfall_samples": 1024,
+    "source_audio_early_end_action": "pad_clean_derived_bed_with_silence_to_video_end"
+  },
+  "asr_backcheck": {
+    "required": true,
+    "purpose": "detect_truncation_pronunciation_and_critical_token_mismatch",
+    "semantic_pass_sufficient_alone": false,
+    "model_version": null,
+    "model_digest": null
+  },
+  "required_final_verdict_roles_in_order": [
+    "translation_semantics", "translation_style", "dub_audio_video", "dub_final_sol"
+  ],
+  "unresolved_gate_a_bindings": [
+    "silence_detector_implementation_sha256", "ffmpeg_image_digest",
+    "no_tts_bed_control_tolerance", "asr_model_version_and_digest",
+    "voice_rate_calibration_fixture_hashes", "video_sample_count_rounding_calibration",
+    "three_fixture_calibration"
+  ]
+}

@@ -1,0 +1,14 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    env:
+      - DOCKER_BUILDKIT=1
+    args:
+      - build
+      - --pull
+      - --file
+      - n8n_cloudrun/Dockerfile.flow
+      - --tag
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/douyin-flow:1.0.0
+      - .
+images:
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/douyin-flow:1.0.0

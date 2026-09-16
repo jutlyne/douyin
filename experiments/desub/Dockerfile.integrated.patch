@@ -1,0 +1,31 @@
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+USER root
+WORKDIR /app
+
+# The base digest already contains the vetted dependencies and baked model
+# weights.  Keep production-code changes in a thin final layer so every audit
+# fix does not redownload the immutable models.
+COPY experiments/desub/prototype.py /app/experiments/desub/prototype.py
+COPY container_short/steps/capcut_tts.py /app/container_short/steps/capcut_tts.py
+COPY integrated_desub_runtime/cloud_pipeline_job.py /app/integrated_desub_runtime/cloud_pipeline_job.py
+COPY integrated_desub_runtime/__init__.py /app/integrated_desub_runtime/__init__.py
+COPY integrated_desub_runtime/tts_mix.py /app/integrated_desub_runtime/tts_mix.py
+
+RUN python -m py_compile \
+        /app/experiments/desub/prototype.py \
+        /app/container_short/steps/capcut_tts.py \
+        /app/integrated_desub_runtime/cloud_pipeline_job.py \
+        /app/integrated_desub_runtime/tts_mix.py \
+    && python -c "from pathlib import Path; import prototype; p=Path('/tmp/mask_inpaint_runner.py'); prototype.write_mask_inpaint_runner(p); s=p.read_text(encoding='utf-8'); assert 'child inpaint CPU fallback is forbidden' in s; assert 'cuda_required' in s; p.unlink()" \
+    && python -c "from google.genai import types; p=types.Part(file_data=types.FileData(file_uri='gs://bucket/video.mp4',mime_type='video/mp4'),video_metadata=types.VideoMetadata(fps=8.0)); assert p.video_metadata and p.video_metadata.fps == 8.0" \
+    && ffmpeg -hide_banner -encoders 2>/dev/null | grep -qE '(^|[[:space:]])libx264([[:space:]]|$)' \
+    && ffmpeg -hide_banner -encoders 2>/dev/null | grep -qE '(^|[[:space:]])aac([[:space:]]|$)' \
+    && ffmpeg -hide_banner -decoders 2>/dev/null | grep -qE '(^|[[:space:]])h264([[:space:]]|$)' \
+    && python -c "import cv2,numpy as np,tempfile; from pathlib import Path; d=Path(tempfile.mkdtemp()); f=np.zeros((48,64,3),dtype=np.uint8); a=d/'probe.mp4'; w=cv2.VideoWriter(str(a),cv2.VideoWriter_fourcc(*'mp4v'),10.0,(64,48)); assert w.isOpened(); [w.write(f) for _ in range(3)]; w.release(); c=cv2.VideoCapture(str(a)); ok,_=c.read(); c.release(); assert ok; b=d/'mask.mkv'; w=cv2.VideoWriter(str(b),cv2.VideoWriter_fourcc(*'FFV1'),10.0,(64,48)); assert w.isOpened(); [w.write(f) for _ in range(3)]; w.release(); c=cv2.VideoCapture(str(b)); ok,_=c.read(); c.release(); assert ok"
+
+USER 65532
+WORKDIR /app
+
+ENTRYPOINT ["python", "/app/integrated_desub_runtime/cloud_pipeline_job.py"]

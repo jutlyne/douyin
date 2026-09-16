@@ -1,0 +1,117 @@
+{
+  "policy_name": "clean_qa_policy",
+  "version": "1.0.0",
+  "status": "blocked_pending_implementation_bindings_and_fixture_calibration",
+  "decision_semantics": "all_required_metrics_and_all_four_verdicts_must_pass",
+  "required_machine_metric_names": [
+    "video_timeline", "video_metadata", "clean_audio", "source_cue_provenance",
+    "residual_ocr", "mask_precision", "outside_mask_damage", "temporal_flicker"
+  ],
+  "subtitle_preflight": {
+    "scan_scope": "full_frame_every_decoded_frame",
+    "supported_dialogue_band_y": [0.55, 0.9],
+    "likely_dialogue_track_outside_band_action": "fail_UNSUPPORTED_SUBTITLE_LAYOUT",
+    "watermark_logo_title_product_and_legitimate_cjk_are_not_removal_targets": true
+  },
+  "video_timeline": {
+    "frame_count_delta": 0,
+    "pts_duration_tolerance_source_ticks_per_frame": 1,
+    "dts_strictly_monotonic": true,
+    "duplicate_or_missing_frame_allowed": false,
+    "container_duration_max_delta_frames": 1
+  },
+  "video_metadata": {
+    "exact_fields": [
+      "width", "height", "sar", "fps", "field_order", "color_primaries",
+      "color_transfer", "color_matrix", "color_range", "chroma_location", "rotation"
+    ],
+    "unspecified_source_metadata_action": "preserve_unspecified"
+  },
+  "clean_audio": {
+    "packet_count_exact": true,
+    "packet_order_exact": true,
+    "packet_payload_sha256_exact": true,
+    "decoded_pcm_sha256_exact": true,
+    "pts_duration_tolerance_audio_ticks": 1,
+    "audio_tick_definition": "1024/sample_rate",
+    "source_early_audio_end_allowed_when_exactly_preserved": true
+  },
+  "source_cue_provenance": {
+    "collection_time": "before_inpaint",
+    "records_create_only": true,
+    "cue_index_contiguous_from_zero": true,
+    "cue_time_order_strict": true,
+    "nfc_equality_required": true,
+    "audio_ranges_nested": true,
+    "visual_ranges_nested": true,
+    "source_side_dialogue_cjk_classification_required": true,
+    "collection_root_preimage_contract": "source_cue_collection_root_contract.json",
+    "missing_mismatch_or_non_monotonic_action": "fail_closed"
+  },
+  "metric_decode": {
+    "candidate_and_control_same_decoder": true,
+    "output": "luma_u8_full_range",
+    "color_matrix_and_range": "source_declared_exact",
+    "missing_frame_or_pixel_action": "exclude_and_report_denominator_never_pass_by_missing",
+    "ffmpeg_image_digest": null,
+    "filter_graph_sha256": null
+  },
+  "residual_ocr": {
+    "independent_from_engine_detector": true,
+    "scan_scope": "all_decoded_frames_full_supported_band",
+    "mandatory_regions": ["active_mask_frames", "union_roi", "transition_minus_2_to_plus_2"],
+    "track_adjacent_bbox_iou_minimum": 0.3,
+    "dialogue_cjk_confidence_fail_threshold": 0.5,
+    "consecutive_frames_to_fail": 2,
+    "single_frame_or_uncertain_action": "agent_review",
+    "detector_model_version": null,
+    "detector_model_digest": null
+  },
+  "mask_precision": {
+    "every_component_requires_caption_or_versioned_padding_provenance": true,
+    "stable_logo_product_title_contact_action": "fail",
+    "component_without_caption_evidence_action": "fail",
+    "outside_supported_geometry_action": "fail",
+    "valid_text_removal_action": "fail",
+    "packet_requires_every_component_and_suspicious_cjk_pair": true
+  },
+  "outside_mask_damage": {
+    "control": "same_encoder_and_settings_without_inpaint",
+    "codec_halo_px": 32,
+    "max_per_frame_luma_mae": 1.5,
+    "global_luma_abs_diff_p99": 8,
+    "absolute_diff_threshold": 16,
+    "max_per_frame_fraction_above_threshold": 0.001
+  },
+  "temporal_flicker": {
+    "stable_core": "intersection(mask_t_minus_1,mask_t)_after_erosion_3px",
+    "empty_core_action": "report_and_agent_review_not_auto_pass",
+    "scene_cut_source": "control",
+    "scene_cut_exclusion_window_frames": 2,
+    "scene_cut_frames_still_in_agent_packet": true,
+    "transition_metric": "p95(abs((candidate_t-candidate_t_minus_1)-(control_t-control_t_minus_1)))",
+    "video_p95_max": 12,
+    "high_frame_threshold": 24,
+    "max_consecutive_high_frames": 2,
+    "union_roi_halo_px": 32,
+    "scene_cut_algorithm": null,
+    "scene_cut_threshold": null,
+    "binary_mask_alpha_threshold": null,
+    "morphology_kernel": null,
+    "morphology_connectivity": null,
+    "global_p99_denominator_definition": null
+  },
+  "repair": {
+    "automatic_clean_visual_repair_attempts": 1,
+    "new_clean_sha_required": true,
+    "full_clean_gate_rerun_required": true,
+    "invalidate_all_dub_derivatives": true
+  },
+  "required_verdict_roles_in_order": ["clean_a", "clean_b", "clean_c", "clean_final_sol"],
+  "unresolved_gate_a_bindings": [
+    "ffmpeg_image_digest", "metric_filter_graph_sha256", "independent_ocr_model_version_and_digest",
+    "scene_cut_algorithm_and_threshold", "binary_mask_alpha_threshold",
+    "morphology_kernel_and_connectivity", "global_p99_denominator_definition",
+    "three_fixture_calibration"
+  ]
+}

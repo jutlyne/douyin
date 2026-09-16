@@ -1,0 +1,66 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - pull
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/integrated-desub-worker@sha256:e897aabb05fd7d754703293071a55d90b608791a612135bc7424aa66a231f859
+
+  - name: gcr.io/cloud-builders/docker
+    env:
+      - DOCKER_BUILDKIT=1
+    args:
+      - build
+      - --cache-from
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/integrated-desub-worker@sha256:e897aabb05fd7d754703293071a55d90b608791a612135bc7424aa66a231f859
+      - --build-arg
+      - BASE_IMAGE=us-docker.pkg.dev/$PROJECT_ID/douyin/integrated-desub-worker@sha256:e897aabb05fd7d754703293071a55d90b608791a612135bc7424aa66a231f859
+      - -f
+      - experiments/desub/Dockerfile.integrated.patch
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/integrated-desub-worker:canary-20260728-14
+      - .
+
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - run
+      - --rm
+      - --entrypoint
+      - python
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/integrated-desub-worker:canary-20260728-14
+      - -c
+      - >-
+        import json,subprocess,sys,tempfile,torch;
+        from pathlib import Path;
+        from google.genai import types;
+        from container_short.steps import capcut_tts;
+        from integrated_desub_runtime.cloud_pipeline_job import balanced_subtitle_lines,measure_drawtext_widths,subtitle_render_style,validate_resume_clean_config,validate_subtitle_widths,validate_tts_identity,video_sample_frame_ids;
+        sys.path.insert(0,"/app/experiments/desub");
+        import prototype;
+        subprocess.run(["ffmpeg","-version"],check=True,stdout=subprocess.DEVNULL);
+        assert torch.__version__.startswith("2.13.0");
+        assert capcut_tts.NETWORK_RETRY_ATTEMPTS == 5;
+        assert capcut_tts.TASK_RETRY_ATTEMPTS == 3;
+        assert capcut_tts.CONCURRENT_LIMIT_RETRY_BACKOFF_SECONDS == 5.0;
+        assert capcut_tts._retryable_task_failure_reason({"err_code":50000011,"err_msg":"ExceededConcurrentLimit"}) == "concurrent-limit";
+        validate_tts_identity(voice="BV075_streaming",resource_id="7102355803792740865",rate=1.5);
+        assert validate_resume_clean_config(uri="gs://b/o",generation="1",sha256="a"*64)["generation"] == "1";
+        assert video_sample_frame_ids(frame_count=31,source_fps=30.0,sample_fps=8.0)[-1] == 30;
+        probe_dir=Path(tempfile.mkdtemp(prefix="subtitle-width-smoke-"));
+        probe_texts=["Có máy chơi game không?","6750 GRE vượt ngân sách."];
+        probe_paths=[];
+        [(probe_paths.append(probe_dir/f"cue_{i}.txt"),(probe_dir/f"cue_{i}.txt").write_text("\n".join(balanced_subtitle_lines(value,max_chars=20)),encoding="utf-8")) for i,value in enumerate(probe_texts)];
+        widths=measure_drawtext_widths(desub=prototype,text_paths=probe_paths,font_path=Path("/app/fonts/DejaVuSans-Bold.ttf"),width=720,height=1280);
+        style=subtitle_render_style(1280);
+        bounds=validate_subtitle_widths(widths,frame_width=720,border_width=float(style["border_width"]),safe_margin=24.0);
+        assert bounds["pass"] and bounds["max_rendered_width_pixels"] <= 672.0;
+        part=types.Part(file_data=types.FileData(file_uri="gs://bucket/video.mp4",mime_type="video/mp4"),video_metadata=types.VideoMetadata(fps=8.0));
+        assert part.video_metadata.fps == 8.0;
+        print(json.dumps({"image_smoke":True,"torch":torch.__version__,"cuda":torch.version.cuda,"subtitle_widths":widths,"subtitle_bounds":bounds}))
+
+images:
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/integrated-desub-worker:canary-20260728-14
+
+options:
+  machineType: E2_HIGHCPU_32
+  diskSizeGb: 200
+
+timeout: 7200s

@@ -1,0 +1,14 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    env:
+      - DOCKER_BUILDKIT=1
+    args:
+      - build
+      - --pull
+      - --file
+      - n8n_cloudrun/Dockerfile
+      - --tag
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/n8n:2.33.7-patched
+      - .
+images:
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/n8n:2.33.7-patched

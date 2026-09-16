@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.desub.local/v1/translation_preflight_approval.schema.json",
+  "title": "Signed create-only translation preflight controller approval",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["payload", "signature"],
+  "properties": {
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version", "translation_preflight_approval_id", "issued_at",
+        "expires_at", "attempt", "cue_id", "cue_index", "source_cue_record",
+        "source_cue_record_sha256", "translation_candidate",
+        "translation_candidate_object_sha256", "candidate_index",
+        "candidate_sha256", "translation_policy_sha256",
+        "semantic_policy_sha256", "style_policy_sha256", "semantic_verdict",
+        "style_verdict", "decision", "controller_signer_principal"
+      ],
+      "properties": {
+        "schema_version": {"const": "1"},
+        "translation_preflight_approval_id": {
+          "type": "string",
+          "pattern": "^tpa-[0-9a-f]{32}$"
+        },
+        "issued_at": {"$ref": "common.schema.json#/$defs/rfc3339"},
+        "expires_at": {"$ref": "common.schema.json#/$defs/rfc3339"},
+        "attempt": {"$ref": "common.schema.json#/$defs/attemptBinding"},
+        "cue_id": {"$ref": "common.schema.json#/$defs/cueId"},
+        "cue_index": {"type": "integer", "minimum": 0},
+        "source_cue_record": {
+          "allOf": [
+            {"$ref": "common.schema.json#/$defs/objectRef"},
+            {"properties": {"content_type": {"const": "application/json"}}}
+          ]
+        },
+        "source_cue_record_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+        "translation_candidate": {
+          "allOf": [
+            {"$ref": "common.schema.json#/$defs/objectRef"},
+            {"properties": {"content_type": {"const": "application/json"}}}
+          ]
+        },
+        "translation_candidate_object_sha256": {
+          "$ref": "common.schema.json#/$defs/sha256"
+        },
+        "candidate_index": {"type": "integer", "minimum": 0, "maximum": 2},
+        "candidate_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+        "translation_policy_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+        "semantic_policy_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+        "style_policy_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+        "semantic_verdict": {"$ref": "#/$defs/semanticVerdict"},
+        "style_verdict": {"$ref": "#/$defs/styleVerdict"},
+        "decision": {"const": "pass"},
+        "controller_signer_principal": {
+          "type": "string",
+          "pattern": "^serviceAccount:[^@\\s]+@[^@\\s]+\\.iam\\.gserviceaccount\\.com$"
+        }
+      }
+    },
+    "signature": {"$ref": "common.schema.json#/$defs/kmsSignature"}
+  },
+  "$defs": {
+    "verdictBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "object", "decision"],
+      "properties": {
+        "role": {"type": "string"},
+        "object": {
+          "allOf": [
+            {"$ref": "common.schema.json#/$defs/objectRef"},
+            {"properties": {"content_type": {"const": "application/json"}}}
+          ]
+        },
+        "decision": {"const": "pass"}
+      }
+    },
+    "semanticVerdict": {
+      "allOf": [
+        {"$ref": "#/$defs/verdictBinding"},
+        {"properties": {"role": {"const": "translation_semantic_preflight"}}}
+      ]
+    },
+    "styleVerdict": {
+      "allOf": [
+        {"$ref": "#/$defs/verdictBinding"},
+        {"properties": {"role": {"const": "translation_style_preflight"}}}
+      ]
+    }
+  },
+  "$comment": "A semantic validator must load both verdict objects and the candidate/source objects, verify their embedded decisions, roles, attempt fence, cue/candidate identity and policy hashes, verify both ObjectRef SHA equality bindings, and require issued_at <= TTS created_at < expires_at before synthesis."
+}

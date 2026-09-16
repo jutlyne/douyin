@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.desub.local/v1/clean_approval.schema.json",
+  "title": "Signed clean authorization envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["payload", "signature"],
+  "properties": {
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version", "clean_approval_id", "issued_at", "expires_at", "attempt",
+        "source", "clean", "clean_manifest", "clean_contract_sha256",
+        "source_cue_manifest", "source_cue_collection_root",
+        "extractor_aligner_policy_sha256", "clean_policy", "clean_machine_report",
+        "clean_verdicts", "controller_signer_principal"
+      ],
+      "properties": {
+        "schema_version": {"const": "1"},
+        "clean_approval_id": {"$ref": "common.schema.json#/$defs/cleanApprovalId"},
+        "issued_at": {"$ref": "common.schema.json#/$defs/rfc3339"},
+        "expires_at": {"$ref": "common.schema.json#/$defs/rfc3339"},
+        "attempt": {"$ref": "common.schema.json#/$defs/attemptBinding"},
+        "source": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "clean": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "clean_manifest": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "clean_contract_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+        "source_cue_manifest": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "source_cue_collection_root": {"$ref": "common.schema.json#/$defs/sha256"},
+        "extractor_aligner_policy_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+        "clean_policy": {"$ref": "common.schema.json#/$defs/policyRef"},
+        "clean_machine_report": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "clean_verdicts": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "prefixItems": [
+            {"$ref": "#/$defs/cleanA"},
+            {"$ref": "#/$defs/cleanB"},
+            {"$ref": "#/$defs/cleanC"},
+            {"$ref": "#/$defs/cleanSol"}
+          ],
+          "items": false
+        },
+        "controller_signer_principal": {
+          "type": "string",
+          "pattern": "^serviceAccount:[^@\\s]+@[^@\\s]+\\.iam\\.gserviceaccount\\.com$"
+        }
+      }
+    },
+    "signature": {"$ref": "common.schema.json#/$defs/kmsSignature"}
+  },
+  "$defs": {
+    "verdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "object", "model", "bindings"],
+      "properties": {
+        "role": {"type": "string"},
+        "object": {"$ref": "common.schema.json#/$defs/objectRef"},
+        "model": {"$ref": "common.schema.json#/$defs/modelIdentity"},
+        "bindings": {"$ref": "common.schema.json#/$defs/artifactBindings"}
+      }
+    },
+    "cleanA": {"allOf": [{"$ref": "#/$defs/verdict"}, {"properties": {"role": {"const": "clean_a"}}}]},
+    "cleanB": {"allOf": [{"$ref": "#/$defs/verdict"}, {"properties": {"role": {"const": "clean_b"}}}]},
+    "cleanC": {"allOf": [{"$ref": "#/$defs/verdict"}, {"properties": {"role": {"const": "clean_c"}}}]},
+    "cleanSol": {"allOf": [{"$ref": "#/$defs/verdict"}, {"properties": {"role": {"const": "clean_final_sol"}}}]}
+  }
+}

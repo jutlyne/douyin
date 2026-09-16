@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Env / secrets
+.venv/
+venv/
+.env
+service-account*.json
+
+# Throwaway / logs
+*.log
+_build*.log
+_exec*.log
+_ref_*.txt
+_ref_*.mp4*
+.tmp_check_*/
+tmp
+
+# Codex task artifacts / generated media
+.codex-tmp/
+output/

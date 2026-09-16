@@ -1,0 +1,26 @@
+FROM python:3.11-alpine
+
+RUN apk upgrade --no-cache \
+    && apk add --no-cache ca-certificates
+
+ENV PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    YOUTUBE_PRIVACY_STATUS=private \
+    YOUTUBE_CATEGORY_ID=24 \
+    YOUTUBE_MADE_FOR_KIDS=false \
+    YOUTUBE_NOTIFY_SUBSCRIBERS=false \
+    YOUTUBE_UPLOAD_CHUNK_BYTES=67108864 \
+    YOUTUBE_CHUNK_TIMEOUT_SECONDS=900 \
+    YOUTUBE_UPLOAD_MAX_RETRIES=8
+
+WORKDIR /app
+COPY container_short/requirements.txt /app/requirements.txt
+RUN pip uninstall -y setuptools wheel \
+    && pip install --upgrade pip \
+    && pip install --only-binary=:all: -r /app/requirements.txt \
+    && pip uninstall -y pip \
+    && rm -rf /usr/local/lib/python3.11/ensurepip
+COPY container_short /app/container_short
+COPY container_long /app/container_long
+
+ENTRYPOINT ["python", "-m", "container_long.youtube_uploader_job"]

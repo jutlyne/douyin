@@ -1,0 +1,17 @@
+# All top-level packages were checked against OSV on 2026-07-27.
+# Torch/Torchvision/CUDA come from the scanned Chainguard PyTorch base image.
+easyocr==1.7.2
+opencv-python-headless==5.0.0.93
+google-genai==2.14.0
+google-cloud-storage==3.13.0
+requests==2.34.2
+Pillow==12.3.0
+tqdm==4.69.1
+scikit-image==0.26.0
+einops==0.8.2
+av==18.0.0
+scipy==1.18.0
+matplotlib==3.11.1
+filesplit==4.1.0
+jaraco-context==6.1.2
+wheel==0.47.0

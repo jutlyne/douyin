@@ -1,0 +1,5 @@
+Flask>=3.1,<4
+gunicorn>=23,<24
+google-auth>=2.34
+google-cloud-storage>=2.18
+requests>=2.32.3

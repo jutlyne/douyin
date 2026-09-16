@@ -1,0 +1,19 @@
+# Build only the isolated OCR/subtitle development image.
+# This does not update the production short-maker image or Cloud Run Job.
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-f'
+      - 'container_short/Dockerfile.subtitle-job'
+      - '-t'
+      - 'us-docker.pkg.dev/$PROJECT_ID/douyin/short:subtitle-dev'
+      - '.'
+
+images:
+  - 'us-docker.pkg.dev/$PROJECT_ID/douyin/short:subtitle-dev'
+
+options:
+  machineType: 'E2_HIGHCPU_8'
+  diskSizeGb: 60
+timeout: '3600s'

@@ -1,0 +1,742 @@
+{
+  "name": "Douyin bot - long direct YouTube upload",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1056,
+        48
+      ],
+      "id": "3b014ce2-7ce7-46b2-811b-2fd4dd7796e6",
+      "name": "Telegram - Nhận tin nhắn",
+      "webhookId": "5ff8060a-485c-43da-84de-8db8b85eeb7b",
+      "credentials": {
+        "telegramApi": {
+          "id": "zb856dYdLEif3rJO",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const message = $input.first().json.message;\nconst rawText = message?.text || message?.caption || '';\nconst chat_id = message?.chat?.id;\n\nfunction validateDouyinUrl(url) {\n  const cleaned = url.replace(/^!+/, '').replace(/[.,;!?，。；！？)\\]}]+$/g, '');\n  const parsed = cleaned.match(/^https?:\\/\\/([^/:?#]+)(\\/[^?#]*)?(?:[?#].*)?$/i);\n  if (!parsed) throw new Error('URL không đúng định dạng: ' + url);\n\n  const hostname = parsed[1].toLowerCase().replace(/^www\\./, '');\n  const pathname = parsed[2] || '/';\n\n  const validHost =\n    hostname === 'douyin.com' || hostname.endsWith('.douyin.com') ||\n    hostname === 'iesdouyin.com' || hostname.endsWith('.iesdouyin.com');\n  if (!validHost) throw new Error('Link không thuộc Douyin: ' + url);\n\n  const validPath =\n    (hostname === 'v.douyin.com' && /^\\/[A-Za-z0-9_-]+\\/?$/.test(pathname)) ||\n    /^\\/video\\/\\d+\\/?$/.test(pathname) ||\n    /^\\/share\\/video\\/\\d+\\/?$/.test(pathname) ||\n    /^\\/note\\/\\d+\\/?$/.test(pathname);\n  if (!validPath) throw new Error('Link Douyin không đúng định dạng video: ' + url);\n\n  return cleaned;\n}\n\nfunction makeId() {\n  return `telegram-${chat_id}-${message.message_id}-${Date.now()}`;\n}\n\ntry {\n  const trimmed = rawText.trim();\n  let command = '';\n  let rest = trimmed;\n\n  const cmdMatch = trimmed.match(/^\\/([a-zA-Z0-9_]+)(?:@\\w+)?\\s*([\\s\\S]*)$/);\n  if (cmdMatch) {\n    command = cmdMatch[1].toLowerCase();\n    rest = cmdMatch[2] || '';\n  }\n\n  if (command === 'help') {\n    const text = [\n      '🤖 <b>Bot tạo video từ Douyin</b>',\n      '',\n      '<b>/short</b> &lt;link&gt; — Tạo 1 video <b>Short</b> từ 1 link Douyin',\n      'Ví dụ: <code>/short https://v.douyin.com/xxxxx/</code>',\n      '',\n      '<b>/long</b> &lt;link1&gt; [link2 ...] — Tạo video <b>dài</b>; 1 link = 1 tập, nhiều link = ghép nhiều clip',\n      'Ví dụ 1 tập: <code>/long https://v.douyin.com/aaa/</code>',\n      'Ví dụ ghép nhiều tập: <code>/long https://v.douyin.com/aaa/ https://v.douyin.com/bbb/</code>',\n      '',\n      '<b>/long --refresh</b> &lt;link1&gt; [link2 ...] — Bỏ cache và xử lý lại toàn bộ link',\n      'Ví dụ: <code>/long --refresh https://v.douyin.com/aaa/ https://v.douyin.com/bbb/</code>',\n      '',\n      '<b>/long</b> &lt;link1&gt; !&lt;link2&gt; &lt;link3&gt; — Chỉ xử lý lại link có dấu <code>!</code>',\n      'Ví dụ: <code>/long https://v.douyin.com/aaa/ !https://v.douyin.com/bbb/ https://v.douyin.com/ccc/</code>',\n      '',\n      '<b>/help</b> — Hiện hướng dẫn này',\n      '',\n      '📌 <b>Lưu ý</b>',\n      '• Link hợp lệ: <code>v.douyin.com/...</code>, <code>douyin.com/video/...</code>, <code>/share/video/...</code>, <code>/note/...</code>',\n      '• <b>/long</b> nhận từ 1–30 link. Gửi 1 link để tạo 1 video long riêng; gửi nhiều link để ghép thành video dài.',\n      '• Mặc định <b>/long</b> sẽ dùng cache theo từng link đã xử lý thành công trước đó.',\n      '• Dùng <code>--refresh</code> khi muốn chạy lại toàn bộ, hoặc thêm <code>!</code> trước link muốn chạy lại riêng.',\n      '• Gửi link không kèm lệnh → mặc định tạo <b>Short</b>.',\n      '• Bot sẽ nhắn lại khi xong hoặc khi lỗi.',\n    ].join('\\n');\n\n    return [{ json: { valid: true, route: 'help', chat_id, text } }];\n  }\n\n  const forceRefreshAll = /(^|\\s)--refresh(\\s|$)/i.test(rest);\n  rest = rest.replace(/(^|\\s)--refresh(\\s|$)/ig, ' ');\n\n  const urlTokens = (rest.match(/!?https?:\\/\\/[^\\s<>\"']+/gi) || []);\n  const urls = urlTokens.map(t => t.replace(/^!+/, ''));\n\n  if (urlTokens.length === 0) {\n    throw new Error('Không tìm thấy link Douyin');\n  }\n\n  if (command === 'long') {\n    const videos = [];\n    const errors = [];\n\n    for (const token of urlTokens) {\n      const forceRefreshOne = token.startsWith('!');\n      const rawUrl = forceRefreshOne ? token.slice(1) : token;\n\n      try {\n        const item = { douyin_url: validateDouyinUrl(rawUrl) };\n        if (forceRefreshOne) item.force_refresh = true;\n        videos.push(item);\n      } catch (e) {\n        errors.push(e.message);\n      }\n    }\n\n    if (videos.length === 0) {\n      throw new Error('Không có link hợp lệ. ' + errors.join('; '));\n    }\n\n    return [{\n      json: {\n        valid: true,\n        route: 'long',\n        videos,\n        force_refresh: forceRefreshAll,\n        count: videos.length,\n        chat_id,\n        id: makeId(),\n        skipped: errors,\n      }\n    }];\n  }\n\n  const douyin_url = validateDouyinUrl(urls[0]);\n\n  return [{\n    json: {\n      valid: true,\n      route: 'short',\n      douyin_url,\n      chat_id,\n      id: makeId(),\n    }\n  }];\n\n} catch (error) {\n  return [{ json: { valid: false, route: 'error', error: error.message, chat_id } }];\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -784,
+        48
+      ],
+      "id": "8df414df-dbc6-4ed8-8802-59e6537f3796",
+      "name": "Chuẩn bị request"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://short-job-runner-YOUR_PROJECT_NUMBER.asia-southeast1.run.app/run",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-Key",
+              "value": "<LONG_RUNNER_API_KEY>"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "douyin_url",
+              "value": "={{ $('Telegram - Nhận tin nhắn').item.json.message.text }}"
+            },
+            {
+              "name": "id",
+              "value": "={{ $json.id }}"
+            },
+            {
+              "name": "callback_url",
+              "value": "https://n8n-selfhost-YOUR_RUN_HASH-as.a.run.app/webhook/short-done"
+            },
+            {
+              "name": "chat_id",
+              "value": "={{ $json.result.chat.id }}"
+            },
+            {
+              "name": "callback_enabled",
+              "value": "={{ true }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        496,
+        64
+      ],
+      "id": "45510520-3c56-43d7-a715-9adaf7978788",
+      "name": "Gọi Cloud Run Short"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Webhook Callback').item.json.body.download_url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -512,
+        624
+      ],
+      "id": "a432256f-5495-43c8-ba3d-6b3a1f7c6455",
+      "name": "Tải MP4 Short"
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "upload",
+        "title": "={{ $('Webhook Callback').item.json.body.youtube_title || 'YouTube Short' }}",
+        "regionCode": "VN",
+        "categoryId": "24",
+        "options": {
+          "description": "={{ $('Webhook Callback').item.json.body.youtube_description }} #hanhan #reviewphim #haihuoc #gauhaihuoc #vietsub",
+          "privacyStatus": "private",
+          "selfDeclaredMadeForKids": false,
+          "tags": "#hanhan #reviewphim #haihuoc #gauhaihuoc #vietsub"
+        }
+      },
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        624
+      ],
+      "id": "a68b2cd1-fd50-4fda-bfe0-2eff9afc1994",
+      "name": "Upload Short lên YouTube",
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "tzvVUEJsnCYJybU4",
+          "name": "YouTube account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Webhook Callback').item.json.body.chat_id }}",
+        "text": "=🎉 *[Hệ thống] Đăng video Short thành công!*\n\n🎬 *Tiêu đề:* {{ $('Webhook Callback').item.json.body.youtube_title || 'N/A' }}\n📺 *YouTube:* https://youtu.be/{{ $json.uploadId || $json.id || $json.videoId }}\n\n🆔 *Mã:* {{ $('Webhook Callback').item.json.body.run_id || $('Webhook Callback').item.json.body.id || 'N/A' }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        320,
+        528
+      ],
+      "id": "4c109efd-13f6-4285-a5c1-fa603347b7e1",
+      "name": "Telegram - Short thành công",
+      "webhookId": "c1afa967-0bcc-4d7b-b5e8-05dc4f4a62e2",
+      "credentials": {
+        "telegramApi": {
+          "id": "zb856dYdLEif3rJO",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Chuẩn bị request').item.json.chat_id }}",
+        "text": "=❌ *[Hệ thống] Link hoặc lệnh không hợp lệ!*\n\n⚠️ Vui lòng gửi đúng link video Douyin.\n\n🛠️ *Chi tiết lỗi:*\n{{ $('Chuẩn bị request').item.json.error || 'Không rõ lỗi' }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -560,
+        304
+      ],
+      "id": "07fd3822-e4fa-4fba-9c91-65d7300a7c7d",
+      "name": "Telegram - Request lỗi",
+      "webhookId": "ce9cabd5-bb55-412c-93f1-1200d845ab22",
+      "credentials": {
+        "telegramApi": {
+          "id": "zb856dYdLEif3rJO",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "short-done",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1392,
+        640
+      ],
+      "id": "df763c03-16e0-408e-8b72-6dc67804f271",
+      "name": "Webhook Callback",
+      "webhookId": "50b49559-1584-41fb-9287-78b223ba4009"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Webhook Callback').item.json.body.chat_id }}",
+        "text": "=❌ *[Hệ thống] Xử lý video thất bại*\n\n🆔 *Mã:* {{ $('Webhook Callback').item.json.body.batch_id || $('Webhook Callback').item.json.body.run_id || $('Webhook Callback').item.json.body.id || 'N/A' }}\n⚠️ *Lý do:* {{ $('Webhook Callback').item.json.body.error || 'Không rõ lỗi' }}\n\nVui lòng kiểm tra lại link Douyin hoặc log job tương ứng.",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -1024,
+        896
+      ],
+      "id": "5d0db95b-937f-4ada-be26-ef26f3a26041",
+      "name": "Telegram - Job lỗi",
+      "webhookId": "7046230b-9e5b-4ac4-ab80-2b6c2a196552",
+      "credentials": {
+        "telegramApi": {
+          "id": "zb856dYdLEif3rJO",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.route }}",
+                    "rightValue": "help",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "c52702cc-ebd3-460e-9bc0-48cc53d55a8e"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "51ac57a1-1c76-4c57-ae95-62f2a192ee33",
+                    "leftValue": "={{ $json.route }}",
+                    "rightValue": "short",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "019c85ab-3006-4418-8701-0db223e1ada0",
+                    "leftValue": "={{ $json.route }}",
+                    "rightValue": "long",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -320,
+        128
+      ],
+      "id": "9a530d85-f364-4d76-bf74-136af06162be",
+      "name": "Phân loại lệnh"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "8fe64722-425a-463d-98de-4e194cf27d68",
+              "leftValue": "={{ $json.valid }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -576,
+        48
+      ],
+      "id": "40263ae5-81c5-45b1-91a0-32f061f21e41",
+      "name": "Request hợp lệ?"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://long-job-runner-YOUR_PROJECT_NUMBER.asia-southeast1.run.app/run",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-Key",
+              "value": "<LONG_RUNNER_API_KEY>"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"videos\": {{ JSON.stringify($('Chuẩn bị request').item.json.videos || []) }},\n  \"force_refresh\": {{ $('Chuẩn bị request').item.json.force_refresh ? 'true' : 'false' }},\n  \"youtube_upload_enabled\": true,\n  \"youtube_privacy_status\": \"private\",\n  \"youtube_category_id\": \"24\",\n  \"youtube_made_for_kids\": false,\n  \"id\": \"{{ $('Chuẩn bị request').item.json.id }}\",\n  \"chat_id\": \"{{ $('Chuẩn bị request').item.json.chat_id }}\",\n  \"callback_enabled\": true,\n  \"callback_url\": \"https://n8n-selfhost-YOUR_RUN_HASH-as.a.run.app/webhook/short-done\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        496,
+        272
+      ],
+      "id": "cda9bd76-6c22-4008-99dc-9ab6a5cc3092",
+      "name": "Gọi Cloud Run Long"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "=📥 *Đã nhận lệnh Long*\n\n🔢 *Số link:* {{ $json.count || ($json.videos || []).length }}\n🆔 *Job ID:* `{{ $json.id }}`\n⏳ Hệ thống sẽ xử lý từng link, ghép video và upload YouTube tự động. Bot sẽ gửi link khi hoàn tất.",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        144,
+        272
+      ],
+      "id": "e3a22717-d8ce-4b29-804d-9a950231ab73",
+      "name": "Telegram - Đã nhận Long",
+      "webhookId": "f9bd5ad3-cd43-48f8-ba4e-84bf0c499d27",
+      "credentials": {
+        "telegramApi": {
+          "id": "zb856dYdLEif3rJO",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "=📥 *Đã nhận lệnh Short*\n\n🔗 *Nguồn:* {{ $json.douyin_url }}\n🆔 *Job ID:* `{{ $json.id }}`\n⏳ Hệ thống đang xử lý video. Bot sẽ gửi link YouTube khi hoàn tất.",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        144,
+        64
+      ],
+      "id": "1a779a96-443f-4dc8-85f5-4e718e7d2d9a",
+      "name": "Telegram - Đã nhận Short",
+      "webhookId": "f9bd5ad3-cd43-48f8-ba4e-84bf0c499d27",
+      "credentials": {
+        "telegramApi": {
+          "id": "zb856dYdLEif3rJO",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -144,
+        -32
+      ],
+      "id": "66522284-32a1-4cba-8430-f7cbfd8fe865",
+      "name": "Telegram - Gửi Help",
+      "webhookId": "1440103f-62d9-4d1b-9bb7-0a81299f64f4",
+      "credentials": {
+        "telegramApi": {
+          "id": "zb856dYdLEif3rJO",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "4640493d-f35c-4dfb-838a-c359d674a109",
+              "leftValue": "={{ $json.body?.ok === true && !!$json.body?.download_url }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -928,
+        672
+      ],
+      "id": "bd0acb0b-5872-47e3-b798-ceee49e24f41",
+      "name": "Short thành công?"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Webhook Callback').item.json.body.chat_id }}",
+        "text": "=❌ *Upload YouTube Short thất bại*\n\n🆔 *Mã:* {{ $('Webhook Callback').item.json.body.run_id || $('Webhook Callback').item.json.body.id || 'N/A' }}\n🎬 *Video:* {{ $('Webhook Callback').item.json.body.youtube_title || 'N/A' }}\n⚠️ *Lý do:* {{ $json.error?.message || $json.message || JSON.stringify($json) }}\n\nNếu lỗi OAuth/EAUTH, hãy reconnect credential YouTube trong n8n.",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        320,
+        800
+      ],
+      "id": "ce3e7424-d7f6-4671-900c-0a36b97e2f2c",
+      "name": "Telegram - Upload Short lỗi",
+      "webhookId": "7046230b-9e5b-4ac4-ab80-2b6c2a196552",
+      "credentials": {
+        "telegramApi": {
+          "id": "zb856dYdLEif3rJO",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "449dc0e1-210c-4d09-89d8-02c6ef6d96e4",
+              "leftValue": "={{ $json.body?.event === 'long.youtube.completed' && !!$json.body?.youtube_url }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1168,
+        512
+      ],
+      "id": "d3b3e88b-9b01-4fcb-8710-046776fd2739",
+      "name": "Long đã upload YouTube?"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Webhook Callback').item.json.body.chat_id }}",
+        "text": "=🎉 *[Hệ thống] Đăng video Long thành công!*\n\n🎬 *Tiêu đề:* {{ $('Webhook Callback').item.json.body.youtube_title || $('Webhook Callback').item.json.body.title_vi || 'N/A' }}\n📺 *YouTube:* {{ $('Webhook Callback').item.json.body.youtube_url }}\n\n🆔 *Mã:* {{ $('Webhook Callback').item.json.body.batch_id || $('Webhook Callback').item.json.body.id || 'N/A' }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -880,
+        448
+      ],
+      "id": "39addd45-e20b-4fd5-9dc2-d85c228ab2dd",
+      "name": "Telegram - Long thành công",
+      "webhookId": "975a7614-b8d0-42af-9226-47109878d3ef",
+      "credentials": {
+        "telegramApi": {
+          "id": "zb856dYdLEif3rJO",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram - Nhận tin nhắn": {
+      "main": [
+        [
+          {
+            "node": "Chuẩn bị request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chuẩn bị request": {
+      "main": [
+        [
+          {
+            "node": "Request hợp lệ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tải MP4 Short": {
+      "main": [
+        [
+          {
+            "node": "Upload Short lên YouTube",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Short lên YouTube": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Short thành công",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram - Upload Short lỗi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Callback": {
+      "main": [
+        [
+          {
+            "node": "Long đã upload YouTube?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Phân loại lệnh": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Gửi Help",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram - Đã nhận Short",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram - Đã nhận Long",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Request hợp lệ?": {
+      "main": [
+        [
+          {
+            "node": "Phân loại lệnh",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram - Request lỗi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram - Đã nhận Long": {
+      "main": [
+        [
+          {
+            "node": "Gọi Cloud Run Long",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram - Đã nhận Short": {
+      "main": [
+        [
+          {
+            "node": "Gọi Cloud Run Short",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Short thành công?": {
+      "main": [
+        [
+          {
+            "node": "Tải MP4 Short",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram - Job lỗi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Long đã upload YouTube?": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Long thành công",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Short thành công?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "52767485-42de-41bf-a0f6-db5e8b760369",
+  "meta": {},
+  "nodeGroups": [],
+  "id": "aJky3OgH12Zj81ej",
+  "tags": []
+}

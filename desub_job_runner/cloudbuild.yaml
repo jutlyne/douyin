@@ -1,0 +1,27 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - desub_job_runner/Dockerfile
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/desub-runner:prod
+      - .
+  - name: us-docker.pkg.dev/$PROJECT_ID/douyin/desub-runner:prod
+    entrypoint: python
+    args:
+      - -m
+      - unittest
+      - discover
+      - -s
+      - /app
+      - -p
+      - test_desub_job_runner.py
+      - -v
+
+images:
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/desub-runner:prod
+
+options:
+  machineType: E2_HIGHCPU_8
+timeout: 1200s

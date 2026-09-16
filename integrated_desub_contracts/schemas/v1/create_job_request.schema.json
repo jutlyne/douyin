@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.desub.local/v1/create_job_request.schema.json",
+  "title": "Create integrated DESUB job request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "douyin_url", "force_refresh", "client_context"],
+  "properties": {
+    "schema_version": {"const": "1"},
+    "douyin_url": {
+      "type": "string",
+      "minLength": 12,
+      "maxLength": 2048,
+      "pattern": "^https://([a-z0-9-]+\\.)*douyin\\.com/[^\\s]+$"
+    },
+    "force_refresh": {"type": "boolean"},
+    "client_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request_id"],
+      "properties": {
+        "request_id": {
+          "$ref": "common.schema.json#/$defs/requestId"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+# Pipeline Douyin → YouTube Short. Chọn bản mới nhất đã vá CVE (theo global rule).
+requests>=2.34.2
+# 2.18.0 supports the Alpine cp311 google-crc32c wheel; both versions were
+# checked against OSV before pinning.
+google-cloud-storage==2.18.0
+google-crc32c==1.5.0
+google-cloud-texttospeech>=2.36.0
+google-auth>=2.55.0
+# SDK Gemini chính thức (Vertex) — structured output + video gs:// gọn gàng.
+google-genai>=2.9.0
+pydantic>=2.13.4
+pillow>=12.2.0
+pytesseract>=0.3.13
+# Latest patched extractor fallback for Douyin. 2026.7.4 was checked against
+# OSV before pinning; earlier 2026 releases are affected by multiple GHSAs.
+yt-dlp==2026.7.4

@@ -1,0 +1,10 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/n8n-watchdog:prod
+      - n8n_watchdog
+
+images:
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/n8n-watchdog:prod

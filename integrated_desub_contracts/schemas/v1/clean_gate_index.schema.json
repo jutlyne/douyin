@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.desub.local/v1/clean_gate_index.schema.json",
+  "title": "Generation-conditional active clean authorization index",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "attempt", "clean_approval_id", "clean_approval", "source_sha256",
+    "clean_sha256", "source_cue_manifest_sha256", "source_cue_collection_root",
+    "clean_policy_sha256", "state_version", "activated_at"
+  ],
+  "properties": {
+    "schema_version": {"const": "1"},
+    "attempt": {"$ref": "common.schema.json#/$defs/attemptBinding"},
+    "clean_approval_id": {"$ref": "common.schema.json#/$defs/cleanApprovalId"},
+    "clean_approval": {"$ref": "common.schema.json#/$defs/objectRef"},
+    "source_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "clean_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "source_cue_manifest_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "source_cue_collection_root": {"$ref": "common.schema.json#/$defs/sha256"},
+    "clean_policy_sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "state_version": {"type": "integer", "minimum": 1},
+    "activated_at": {"$ref": "common.schema.json#/$defs/rfc3339"}
+  }
+}

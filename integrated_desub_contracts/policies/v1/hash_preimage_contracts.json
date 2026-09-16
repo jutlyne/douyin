@@ -1,0 +1,70 @@
+{
+  "policy_name": "desub_hash_preimage_contracts",
+  "version": "1.0.0",
+  "status": "frozen_preimages_runtime_jcs_still_blocked",
+  "canonicalization": "RFC8785_JCS",
+  "encoding": "UTF-8",
+  "digest": "SHA-256",
+  "contracts": {
+    "translation_candidate_sha256": {
+      "schema_version": "1",
+      "ordered_semantic_fields": [
+        "attempt.job_id", "attempt.attempt_id", "attempt.attempt_seq", "attempt.fence_digest",
+        "cue_id", "cue_index", "source_cue_record_sha256", "candidate_index", "reason",
+        "text_vi_nfc", "generator.provider", "generator.service_identity", "generator.model_id",
+        "generator.model_version", "generator.response_id", "generator_prompt_sha256"
+      ]
+    },
+    "normalized_capcut_tts_request_sha256": {
+      "schema_version": "1",
+      "ordered_semantic_fields": [
+        "provider", "base_url", "create_path", "request_key", "task_version", "audio_format",
+        "voice", "resource_id", "xml_lang", "prosody_rate", "text_vi_nfc"
+      ],
+      "excluded_ephemeral_fields": [
+        "device_identity", "cookies", "authorization", "request_signature", "bind_id",
+        "task_context_uuid", "timestamp", "retry_number"
+      ]
+    },
+    "vietsub_render_event_sha256": {
+      "schema_version": "1",
+      "ordered_semantic_fields": [
+        "attempt.job_id", "attempt.attempt_id", "attempt.attempt_seq", "cue_id", "cue_index",
+        "translation_candidate_sha256", "text_vi_nfc", "start_sample", "end_sample_inclusive",
+        "chosen_font_px", "line_count", "text_lines_nfc", "line_break_sequence",
+        "anchor_x_px", "anchor_y_px",
+        "rendered_alpha_bbox_px.x", "rendered_alpha_bbox_px.y",
+        "rendered_alpha_bbox_px.width", "rendered_alpha_bbox_px.height",
+        "vietsub_alpha_mask.uri", "vietsub_alpha_mask.generation",
+        "vietsub_alpha_mask.size_bytes", "vietsub_alpha_mask.sha256",
+        "vietsub_alpha_mask.content_type", "font_file_sha256",
+        "renderer_binding_sha256", "vietsub_style_policy_sha256"
+      ],
+      "field_encodings": {
+        "chosen_font_px": "positive integer output-frame pixels",
+        "text_lines_nfc": "ordered array of one or two NFC strings, exactly as rendered and without line separators",
+        "line_break_sequence": "ordered array containing one literal ASS \\\\N token between each adjacent pair of text_lines_nfc; empty for one line",
+        "anchor_x_px": "integer output-frame pixel coordinate after deterministic policy rounding",
+        "anchor_y_px": "integer output-frame pixel coordinate after deterministic policy rounding",
+        "rendered_alpha_bbox_px": "integer x/y/width/height bounding the non-zero rendered subtitle alpha",
+        "vietsub_alpha_mask": "complete immutable common.schema.json ObjectRef projection; its sha256 is the digest of the referenced alpha-mask bytes",
+        "renderer_binding_sha256": "SHA-256 of the exact renderer component/runtime binding record",
+        "vietsub_style_policy_sha256": "SHA-256 of the exact vietsub_style_policy.json bytes used for rendering"
+      },
+      "unresolved_gate_a_bindings": [
+        "font_file_sha256",
+        "renderer_binding_sha256"
+      ]
+    },
+    "source_classification_sha256": {
+      "schema_version": "1",
+      "ordered_semantic_fields": [
+        "source_sha256", "cue_id", "cue_index", "sample_frame", "sample_frame_sha256",
+        "caption_bbox_normalized", "role", "script", "inside_supported_band",
+        "classifier.provider", "classifier.model_id", "classifier.model_version",
+        "classifier.model_digest", "classifier.response_id", "confidence"
+      ]
+    }
+  },
+  "rule": "Field order above documents the exact projection; RFC8785 determines object-key serialization order. Unknown or omitted semantic fields create a different contract version rather than being silently hashed."
+}

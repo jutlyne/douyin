@@ -1,0 +1,139 @@
+{
+  "policy_name": "vietsub_style_policy",
+  "version": "1.0.0",
+  "status": "blocked_pending_font_renderer_and_fixture_calibration",
+  "unicode_normalization": "NFC",
+  "supported_caption_band": {
+    "coordinate_space": "post_rotation_output_frame_normalized",
+    "y_axis": "top_zero_bottom_one",
+    "y_min_inclusive": 0.55,
+    "y_max_inclusive": 0.9,
+    "membership_rule": "caption_baseline_y_normalized >= y_min_inclusive AND caption_baseline_y_normalized <= y_max_inclusive",
+    "bbox_intersection_is_membership": false,
+    "bbox_containment_is_membership": false
+  },
+  "font": {
+    "family": "DejaVu Sans",
+    "file_path_in_image": null,
+    "file_sha256": null,
+    "license_uri": null,
+    "license_sha256": null,
+    "vietnamese_glyph_audit_sha256": null
+  },
+  "renderer": {
+    "status": "blocked_unresolved_exact_runtime_bindings",
+    "name": "libass",
+    "container_image_digest": null,
+    "renderer_binding_sha256": null,
+    "renderer_executable_path": null,
+    "renderer_executable_version": null,
+    "renderer_executable_sha256": null,
+    "libass_version": null,
+    "libass_sha256": null,
+    "fontconfig_version": null,
+    "fontconfig_sha256": null,
+    "harfbuzz_version": null,
+    "harfbuzz_sha256": null,
+    "freetype_version": null,
+    "freetype_sha256": null
+  },
+  "ass_script_info": {
+    "play_res_x_rule": "PlayResX = post_rotation_output_frame_width_px",
+    "play_res_y_rule": "PlayResY = post_rotation_output_frame_height_px",
+    "play_res_values_must_be_positive_integers": true,
+    "scaled_border_and_shadow": "yes",
+    "wrap_style": 2,
+    "wrap_style_semantics": "no_automatic_wrapping; the exact line sequence is supplied with literal ASS \\N separators"
+  },
+  "ass_style": {
+    "primary_colour": "&H00FFFFFF",
+    "outline_colour": "&H00000000",
+    "bold": true,
+    "italic": false,
+    "underline": false,
+    "strikeout": false,
+    "border_style": 1,
+    "outline_px": 2.5,
+    "shadow": 0,
+    "alignment": 5,
+    "box": false,
+    "blur": false
+  },
+  "font_size": {
+    "rounding": "round_ties_to_even",
+    "preferred_px_formula": "max(18,round_ties_to_even(frame_height*0.040))",
+    "maximum_px_formula": "max(18,round_ties_to_even(frame_height*0.040))",
+    "minimum_px_formula": "max(18,round_ties_to_even(frame_height*0.030))",
+    "search_step_px": -1,
+    "below_minimum_allowed": false
+  },
+  "deterministic_geometry": {
+    "decimal_input_rule": "Interpret normalized JSON numbers as exact decimal values; binary floating-point intermediates are forbidden.",
+    "nonnegative_rounding_rule": "round_half_up_nonnegative(x)=floor(x+0.5)",
+    "rounding_order": [
+      "choose integer font_px",
+      "compute integer line_advance_px",
+      "compute unrounded bbox center in output-frame pixels",
+      "compute and round seed_anchor_x_px and seed_anchor_y_px",
+      "render the probe alpha bbox",
+      "apply the minimum integer containment translation to the seed anchor",
+      "record final anchor_x_px, anchor_y_px, and final rendered alpha bbox"
+    ],
+    "line_advance_px_formula": "floor((font_px*118+50)/100)",
+    "bbox_center_x_px_formula": "frame_width_px*(caption_bbox_normalized.x+caption_bbox_normalized.width/2)",
+    "bbox_center_y_px_formula": "frame_height_px*(caption_bbox_normalized.y+caption_bbox_normalized.height/2)",
+    "seed_anchor_x_px_formula": "round_half_up_nonnegative(bbox_center_x_px)",
+    "seed_anchor_y_px_formula": "round_half_up_nonnegative(bbox_center_y_px-((line_count-1)*line_advance_px)/2)",
+    "band_top_px_formula": "ceil(frame_height_px*55/100)",
+    "band_bottom_exclusive_px_formula": "floor(frame_height_px*90/100)",
+    "final_anchor_x_px_formula": "seed_anchor_x_px+minimum_integer_dx_that_fully_contains_probe_alpha_bbox_in_horizontal_safe_region",
+    "final_anchor_y_px_formula": "seed_anchor_y_px+minimum_integer_dy_that_fully_contains_probe_alpha_bbox_in_[band_top_px,band_bottom_exclusive_px)",
+    "anchor_units": "integer_output_frame_pixels"
+  },
+  "layout": {
+    "max_lines": 2,
+    "line_advance_formula": "line_advance_px=floor((font_px*118+50)/100)",
+    "horizontal_margin_px_formula": "max(20,round_ties_to_even(frame_width*0.08))",
+    "maximum_rendered_width_px_formula": "min(round_ties_to_even(frame_width*0.88),frame_width-2*max(20,round_ties_to_even(frame_width*0.08)))",
+    "width_includes_outline": true,
+    "anchor_x_formula": "round_half_up_nonnegative(frame_width_px*center_x(source_caption_bbox_normalized))",
+    "anchor_y_formula": "round_half_up_nonnegative(frame_height_px*center_y(source_caption_bbox_normalized)-(line_count-1)*line_advance_px/2)",
+    "clamp_rendered_alpha_bbox_to_supported_band": {
+      "y_min_inclusive": 0.55,
+      "y_max_inclusive": 0.9,
+      "source_caption_membership_definition": "inclusive_baseline_containment",
+      "rendered_alpha_bbox_rule": "full containment in [ceil(frame_height_px*0.55),floor(frame_height_px*0.90)) after the minimum integer anchor translation"
+    },
+    "clamp_rendered_alpha_bbox_to_horizontal_safe_region": true
+  },
+  "wrapping": {
+    "normalize_whitespace": true,
+    "split_only_at_word_boundary": true,
+    "target_codepoints_per_line": 24,
+    "split_objective_lexicographic": [
+      "total_codepoint_overflow_beyond_24",
+      "absolute_line_length_delta"
+    ],
+    "third_line_allowed": false,
+    "truncate_allowed": false,
+    "tofu_allowed": false
+  },
+  "failure": {
+    "code": "DUB_SUBTITLE_UNFIT",
+    "conditions": [
+      "text_does_not_fit_at_minimum_px",
+      "missing_vietnamese_glyph",
+      "rendered_alpha_bbox_outside_safe_region",
+      "more_than_two_lines",
+      "tofu_or_truncation"
+    ]
+  },
+  "unresolved_gate_a_bindings": [
+    "exact_font_file_and_path", "font_file_sha256", "license_uri_and_sha256",
+    "vietnamese_glyph_audit_sha256", "three_fixture_layout_calibration",
+    "container_image_digest", "renderer_binding_sha256",
+    "renderer_executable_path_version_and_sha256",
+    "libass_version_and_sha256", "fontconfig_version_and_sha256",
+    "harfbuzz_version_and_sha256", "freetype_version_and_sha256"
+  ]
+}

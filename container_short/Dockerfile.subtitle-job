@@ -1,0 +1,47 @@
+# Isolated Cloud Run Job image for OCR + Vietnamese burned-in subtitles.
+# Production continues to use Dockerfile.job and container_short.short_job.
+FROM python:3.11-alpine
+
+RUN apk upgrade --no-cache \
+    && apk add --no-cache \
+        ffmpeg ca-certificates fontconfig font-dejavu font-liberation
+
+ENV PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    VERTEX_REGION=us-central1 \
+    TARGET_SECONDS=40 \
+    SPEED=1.0 \
+    BGM_GAIN_DB=-20 \
+    ENABLE_BGM=true \
+    SUBTITLE_MARGIN_V=690 \
+    SUBTITLE_OCR_FPS=4.0 \
+    STRICT_SUBTITLE_OCR=true \
+    SUBTITLE_OCR_PROVIDER=gemini \
+    SUBTITLE_TIME_OFFSET_SECONDS=0 \
+    ALIGN_DUB_TO_SPEECH=true \
+    DUB_MAX_SPEED=1.35 \
+    DUB_HARD_MAX_SPEED=1.45 \
+    DUB_TAIL_HEADROOM_SECONDS=1.0 \
+    DUB_MODE=timed \
+    TTS_PROVIDER=capcut \
+    TTS_FALLBACK_PROVIDER=google \
+    TTS_VOICE=BV074_streaming \
+    SPEAKING_RATE=1.0 \
+    GOOGLE_TTS_VOICE=vi-VN-Wavenet-B \
+    CAPCUT_RESOURCE_ID=7102355709945188865 \
+    CAPCUT_POLL_TIMEOUT=300 \
+    GEMINI_MODEL=gemini-2.5-flash
+
+WORKDIR /app
+
+COPY container_short/requirements.txt /app/container_short/requirements.txt
+RUN pip uninstall -y setuptools wheel \
+    && pip install --upgrade pip \
+    && pip install --only-binary=:all: -r /app/container_short/requirements.txt \
+    && pip uninstall -y pip \
+    && rm -rf /usr/local/lib/python3.11/ensurepip
+
+COPY douyin_api /app/douyin_api
+COPY container_short /app/container_short
+
+ENTRYPOINT ["python", "-m", "container_short.subtitle_job"]

@@ -1,0 +1,86 @@
+{
+  "gate": "A",
+  "schema_version": "1",
+  "assessed_at": "2026-07-27T09:28:14+07:00",
+  "status": "blocked",
+  "fail_closed": true,
+  "completed_artifacts": [
+    "v1 intake, status, callback and exact-attempt schemas",
+    "closed state graph, one clean-repair budget and stable 73-code error semantics",
+    "source-cue, clean, dub, verdict, approval and index schemas",
+    "pure translation-candidate, signed-preflight and TTS attempt schemas",
+    "candidate clean, dub, mix, Vietsub, input and retention policies",
+    "closed Dub output metadata and named five-stem bindings",
+    "source-cue collection-root preimage contract",
+    "exact-byte QA and approval-evidence structure validators",
+    "KMS-dependent structure helpers excluded from the public API",
+    "RFC8785 product golden bytes",
+    "runtime, Cloud Run dry-run and KMS decision records",
+    "stdlib semantic validation and contract tests"
+  ],
+  "local_verification": {
+    "command": "python -m unittest discover -s tests -v",
+    "total_tests": 245,
+    "passed": 239,
+    "skipped": 6,
+    "failed": 0,
+    "packages_or_tools_installed": 0
+  },
+  "blockers": [
+    {
+      "code": "QA_RUNTIME_REQUIREMENT_CONFLICT",
+      "evidence": "docs/DESUB_QA_RUNTIME_DECISION.md",
+      "resolution": "Approve and prove one callable runtime that satisfies both the selected model roles and Singapore processing/retention requirements, or explicitly revise one hard requirement."
+    },
+    {
+      "code": "QA_AUDIO_VIDEO_VERIFIER_UNPROVEN",
+      "evidence": "docs/DESUB_QA_RUNTIME_DECISION.md",
+      "resolution": "Approve and test an audio/video-capable final Dub verifier, or explicitly revise the contract to consume precisely frozen derived evidence and acknowledge the lost perceptual checks; Sol/Luna/Terra cannot be treated as direct listeners through their documented API modalities."
+    },
+    {
+      "code": "CLOUD_RUN_EXECUTION_TEMPLATE_PROOF_MISSING",
+      "evidence": "docs/DESUB_CLOUD_RUN_DRY_RUN.md",
+      "resolution": "After separate authorization, run one dedicated side-effect-free no-op execution and capture its exact Execution.template token binding."
+    },
+    {
+      "code": "KMS_ALLOWLIST_EMPTY",
+      "evidence": "docs/DESUB_KMS_RUNBOOK.md",
+      "resolution": "Provision and prove an ENABLED EC_SIGN_P256_SHA256 key version, public-key hash, IAM and audit configuration; then implement a live verification result bound to exact payload/signature/key/allowlist state and evaluation time. A detached boolean is not authorization."
+    },
+    {
+      "code": "CANDIDATE_JCS_RECOMPUTE_MISSING",
+      "evidence": "integrated_desub_contracts/policies/v1/hash_preimage_contracts.json",
+      "resolution": "Select a maintained, CVE-cleared RFC8785 implementation; recompute translation_candidate_sha256 from the exact frozen preimage; and add golden plus tamper tests before candidate hashes can authorize downstream work."
+    },
+    {
+      "code": "FONT_ASSET_UNPINNED",
+      "evidence": "integrated_desub_contracts/policies/v1/vietsub_style_policy.json",
+      "resolution": "Provide the exact redistributable font file, path, SHA-256, license SHA-256 and Vietnamese glyph audit."
+    },
+    {
+      "code": "MEDIA_IMPLEMENTATIONS_UNPINNED",
+      "evidence": "integrated_desub_contracts/policies/v1/clean_qa_policy.json",
+      "resolution": "Pin CVE-cleared FFmpeg/OCR/ASR assets plus all filter, morphology, resampler, loudness, limiter, AAC and tail semantics."
+    },
+    {
+      "code": "FIXTURE_SUITE_INCOMPLETE",
+      "evidence": "integrated_desub_contracts/fixtures/v1/canary_fixture_suite.json",
+      "resolution": "Supply the full manhua source and close ground truth for all three immutable fixtures, early-audio tail and direct rate-1.5000 TTS."
+    },
+    {
+      "code": "THRESHOLD_CALIBRATION_PENDING",
+      "evidence": "integrated_desub_contracts/policies/v1/dub_qa_policy.json",
+      "resolution": "Calibrate every candidate threshold on the complete three-fixture suite without weakening a failed gate."
+    }
+  ],
+  "prohibited_while_blocked": [
+    "start_phase_b",
+    "process_a_production_video",
+    "execute_a_cloud_run_job",
+    "deploy_or_mutate_cloud_resources",
+    "provision_or_rotate_kms",
+    "mutate_n8n",
+    "mint_a_user_download_link",
+    "claim_multi_agent_video_qa_passed"
+  ]
+}

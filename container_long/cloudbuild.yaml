@@ -1,0 +1,44 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - container_long/Dockerfile
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/long-worker:dev
+      - .
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - container_long/Dockerfile.assembler
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/long-assembler:dev
+      - .
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - container_long/Dockerfile.coordinator
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/long-coordinator:dev
+      - .
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - long_job_runner/Dockerfile
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/long-runner:dev
+      - .
+
+images:
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/long-worker:dev
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/long-assembler:dev
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/long-coordinator:dev
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/long-runner:dev
+
+options:
+  machineType: E2_HIGHCPU_8
+  diskSizeGb: 100
+timeout: 3600s

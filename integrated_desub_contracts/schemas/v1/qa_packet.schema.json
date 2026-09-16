@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.desub.local/v1/qa_packet.schema.json",
+  "title": "Minimum redacted verifier QA packet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "packet_id", "role", "attempt", "policy", "bindings",
+    "full_source_video_included", "declared_total_bytes", "evidence",
+    "created_at", "expires_at"
+  ],
+  "properties": {
+    "schema_version": {"const": "1"},
+    "packet_id": {"type": "string", "pattern": "^qap-[0-9a-f]{32}$"},
+    "role": {"$ref": "taxonomy.schema.json#/$defs/verifierRole"},
+    "attempt": {"$ref": "common.schema.json#/$defs/attemptBinding"},
+    "policy": {"$ref": "common.schema.json#/$defs/policyRef"},
+    "bindings": {"$ref": "verifier_verdict.schema.json#/properties/bindings"},
+    "full_source_video_included": {"const": false},
+    "declared_total_bytes": {"type": "integer", "minimum": 1},
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "object"],
+        "properties": {
+          "kind": {
+            "enum": [
+              "source_cue_record", "translation_candidate", "translation_preflight_context",
+              "source_crop", "source_audio_slice", "candidate_crop", "transition_clip",
+              "high_motion_clip", "outside_mask_sample", "contact_sheet", "alpha_mask",
+              "machine_report", "cue_ledger", "selected_tts_clip", "dubbed_excerpt"
+            ]
+          },
+          "cue_id": {"$ref": "common.schema.json#/$defs/cueId"},
+          "object": {"$ref": "common.schema.json#/$defs/objectRef"}
+        }
+      }
+    },
+    "created_at": {"$ref": "common.schema.json#/$defs/rfc3339"},
+    "expires_at": {
+      "$ref": "common.schema.json#/$defs/rfc3339",
+      "$comment": "Semantic validation requires 0 < expires_at-created_at <= 172800 seconds."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "role": {"enum": ["translation_semantic_preflight", "translation_style_preflight"]}
+        },
+        "required": ["role"]
+      },
+      "then": {
+        "properties": {
+          "bindings": {
+            "required": [
+              "cue_id", "source_cue_record_sha256",
+              "translation_attempt_sha256", "candidate_sha256"
+            ]
+          },
+          "evidence": {
+            "allOf": [
+              {
+                "contains": {
+                  "type": "object",
+                  "required": ["kind", "cue_id", "object"],
+                  "properties": {"kind": {"const": "source_cue_record"}}
+                },
+                "minContains": 1,
+                "maxContains": 1
+              },
+              {
+                "contains": {
+                  "type": "object",
+                  "required": ["kind", "cue_id", "object"],
+                  "properties": {"kind": {"const": "translation_candidate"}}
+                },
+                "minContains": 1,
+                "maxContains": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "role": {"enum": ["translation_semantics", "translation_style", "dub_audio_video", "dub_final_sol"]}
+        },
+        "required": ["role"]
+      },
+      "then": {
+        "properties": {
+          "bindings": {"required": ["cue_ledger_sha256", "dubbed_sha256", "machine_report_sha256"]}
+        }
+      }
+    }
+  ]
+}

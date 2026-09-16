@@ -1,0 +1,17 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - container_long/Dockerfile.assembler
+      - -t
+      - us-docker.pkg.dev/$PROJECT_ID/douyin/long-assembler:test
+      - .
+
+images:
+  - us-docker.pkg.dev/$PROJECT_ID/douyin/long-assembler:test
+
+options:
+  machineType: E2_HIGHCPU_8
+  diskSizeGb: 100
+timeout: 1800s

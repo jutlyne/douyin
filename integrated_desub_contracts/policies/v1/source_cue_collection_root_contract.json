@@ -1,0 +1,37 @@
+{
+  "contract_name": "source_cue_collection_root_preimage",
+  "version": "1.0.0",
+  "canonicalization": "RFC8785_JCS",
+  "encoding": "UTF-8",
+  "digest": "SHA-256",
+  "preimage": {
+    "algorithm": "RFC8785-JCS-SHA256-ORDERED-v1",
+    "schema_version": "1",
+    "source": "full_object_ref",
+    "cue_count": "integer_equal_to_cues_length",
+    "extractor_policy_sha256": "lowercase_hex_sha256",
+    "aligner_policy_sha256": "lowercase_hex_sha256",
+    "cues": [
+      {
+        "cue_id": "cue-%06d_from_cue_index",
+        "cue_index": "zero_based_contiguous_integer",
+        "record": "full_object_ref",
+        "crop": "full_object_ref",
+        "pcm_slice": "full_object_ref"
+      }
+    ]
+  },
+  "full_object_ref_field_order_for_readability_only": [
+    "uri", "generation", "size_bytes", "sha256", "content_type"
+  ],
+  "array_order_authoritative": true,
+  "excluded_manifest_fields": ["attempt", "collection_root_algorithm", "collection_root_contract_sha256", "collection_root", "created_at"],
+  "validation": [
+    "cue_count_equals_array_length",
+    "cue_indices_equal_0_through_N_minus_1",
+    "cue_ids_are_unique_and_equal_cue_dash_six_digit_index",
+    "every_manifest_object_ref_exactly_matches_the_referenced_cue_record",
+    "manifest_source_exactly_matches_every_record_source_sha256_and_attempt",
+    "record_audio_and_visual_ranges_are_monotonic"
+  ]
+}

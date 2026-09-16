@@ -1,0 +1,32 @@
+{
+  "fixture_name": "cloud_run_jobs_run_validate_only_template",
+  "version": "1.0.0",
+  "status": "template_only_not_executed",
+  "target": {
+    "project": null,
+    "region": "asia-southeast1",
+    "job": "integrated-desub-worker"
+  },
+  "request": {
+    "validateOnly": true,
+    "overrides": {
+      "taskCount": 1,
+      "containerOverrides": [
+        {
+          "env": [
+            {"name": "DESUB_LAUNCH_TOKEN", "value": "[random-128-bit-token]"},
+            {"name": "DESUB_JOB_ID", "value": "[desub-job-id]"},
+            {"name": "DESUB_ATTEMPT_ID", "value": "[attempt-id]"},
+            {"name": "DESUB_ATTEMPT_SEQ", "value": "[positive-decimal]"}
+          ]
+        }
+      ]
+    }
+  },
+  "observed_request_sha256": null,
+  "observed_response_sha256": null,
+  "observed_operation_name": null,
+  "observed_execution_name": null,
+  "execution_template_env_proof_sha256": null,
+  "blocker": "validateOnly does not persist an Execution; exact Execution.template correlation requires a separately authorized controlled no-op execution."
+}
